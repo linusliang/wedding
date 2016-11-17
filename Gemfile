@@ -1,6 +1,9 @@
 source 'https://rubygems.org'
 
 
+gem 'sinatra', github: 'sinatra'
+gem 'instagram'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.0', '>= 5.0.0.1'
 # Use sqlite3 as the database for Active Record
@@ -27,10 +30,9 @@ gem 'jbuilder', '~> 2.5'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
-
-gem 'instagram'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
