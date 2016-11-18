@@ -14,6 +14,8 @@ default: &default
 development:
   <<: *default
   database: wedding_dev
+  encoding: utf8mb4
+  collation: utf8mb4_unicode_ci
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -21,7 +23,11 @@ development:
 test:
   <<: *default
   database: wedding_test
-
+  encoding: utf8mb4
+  collation: utf8mb4_unicode_ci
+  
 production:
   <<: *default
   database: wedding
+  encoding: utf8mb4
+  collation: utf8mb4_unicode_ci

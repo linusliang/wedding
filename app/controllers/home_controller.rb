@@ -11,7 +11,8 @@ class HomeController < ApplicationController
 		@client = Instagram.client(:access_token => session[:access_token])
 		#ap @client.tag_recent_media('linusfoundthebesther')
 
-		feed = InstagramFeedByHashtag.feed( 'linusfoundthebesther', 20 ) # Make request and store JSON in feed variable
+		feed = InstagramFeedByHashtag.feed( 'dogs', 20) # Make request and store JSON in feed variable
+		#ap feed
 
 		for picture in feed
 
@@ -21,7 +22,9 @@ class HomeController < ApplicationController
 				
 				p = Picture.new
 				p.url = picture['display_src']
-				p.caption =	picture['caption']
+				unless picture['caption'].nil?
+					p.caption =	picture['caption'][0..200].scrub
+				end	
 				p.pid = picture['id']
 				p.save
 				
@@ -29,7 +32,7 @@ class HomeController < ApplicationController
 
 				#send picture to printer
 				#
-				print_pic(p.url, p.pid)
+				#print_pic(p.url, p.pid)
 
 			# else don't do anything
 			#	

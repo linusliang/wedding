@@ -6,5 +6,10 @@ class CreatePictures < ActiveRecord::Migration[5.0]
       t.text :pid
       t.timestamps
     end
+
+    execute <<-SQL
+		ALTER TABLE pictures CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_bin, MODIFY caption VARCHAR(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin
+    SQL
+
   end
 end

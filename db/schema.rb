@@ -12,12 +12,12 @@
 
 ActiveRecord::Schema.define(version: 20161117051340) do
 
-  create_table "pictures", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
-    t.text     "url",        limit: 65535
-    t.text     "caption",    limit: 65535
-    t.text     "pid",        limit: 65535
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+  create_table "pictures", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
+    t.text     "url",        limit: 16777215
+    t.string   "caption",    limit: 250
+    t.text     "pid",        limit: 16777215
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
 end
