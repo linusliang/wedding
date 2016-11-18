@@ -2,7 +2,8 @@ class HomeController < ApplicationController
 
 	require "instagram"
 	require "awesome_print"
-	require 'open-uri'
+	require "open-uri"
+	require 'instagram_feed_by_hashtag'
 
 	CALLBACK_URL = "http://localhost:3000/oauth/callback"
 	SCOPE = "public_content"
@@ -28,7 +29,15 @@ class HomeController < ApplicationController
 		@client = Instagram.client(:access_token => session[:access_token])
 		#ap @client.tag_recent_media('linusfoundthebesther')
 
-		for media_item in @client.tag_recent_media('linusfoundthebesther')
+		feed = InstagramFeedByHashtag.feed( 'tbt', 6 ) # Make request and store JSON in feed variable
+		ap feed
+		@images = [] # Define array
+		for i in 0..(feed.count - 1) # Loop through feed
+		    @images << feed[i]['display_src'] unless feed[i].nil? # Grab images URLs and store them in @images
+		end
+
+
+		for media_item in @client.tag_recent_media('tbt')
 
 			# if there is a new picture, save it to the database and
 			# also print it out
@@ -42,7 +51,9 @@ class HomeController < ApplicationController
 				
 				@new_pics.push(media_item)
 
-				print_pic(p.url, p.pid)
+				# send picture to printer
+				#
+				#print_pic(p.url, p.pid)
 
 			# else don't do anything
 			#	
@@ -52,10 +63,10 @@ class HomeController < ApplicationController
 		end
 	end
 
-	def print_pic(link, pic)
+	def print_pic(link, pid)
 		download = open(link)
-		IO.copy_stream(download, '~/' + pic  + '.png')
-		p "!!!!!!!!!!! Saving " + pic + '.png'
+		IO.copy_stream(download, "#{Rails.root}/public/" + pid  + '.png')
+		system("lpr", "#{Rails.root}/public/" + pid  + '.png')
 	end
 end
 
