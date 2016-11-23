@@ -42,6 +42,12 @@
 
 		<script language="javascript" type="text/javascript">
 			setTimeout("location.reload();",60000);
+
+			function print_pic(pid){
+				var xhr = new XMLHttpRequest();
+				xhr.open('GET', 'http://localhost:3000/home/print_pic/'+pid);
+				xhr.send(null);
+			}
 		</script>
 	</head>
 
@@ -61,18 +67,19 @@
 			<% end %>
 		<% end %>
 
-
-		<div><h1>Recent Pictures</h1></div>
+		<div><h1>Old Pictures</h1></div>
 		<% if @old_pics.empty? %>
-			<div class="nopic">No Recent Pictures</div>
+			<div class="nopic">No Old Pictures</div>
 		<% else %>
 			<% for pic in @old_pics do %>
 				<div class="pic">
-				  <div><img height="200" src='<%= pic['display_src']  %>'></img></div>
+				  <div ><img height="200" src='<%= "http://localhost:3000/" + pic['pid'] + ".png" %>' onclick="print_pic('<%=pic['pid']%>')" onMouseOver="this.style.cursor='pointer'"></img></div>
 				  <div class="caption"><%= pic['caption'] %></div>
 				</div>
 			<% end %>
 		<% end %>
+
+
 
 
 	</body>
