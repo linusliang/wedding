@@ -4,6 +4,8 @@ class HomeController < ApplicationController
 	require "open-uri"
 	require 'instagram_feed_by_hashtag'
 
+	HASHTAG = 'gilmoregirls'
+
 	def index
 		@new_pics = []
 		@old_pics = []
@@ -11,7 +13,7 @@ class HomeController < ApplicationController
 		@client = Instagram.client(:access_token => session[:access_token])
 		#ap @client.tag_recent_media('linusfoundthebesther')
 
-		feed = InstagramFeedByHashtag.feed( 'dogs', 20) # Make request and store JSON in feed variable
+		feed = InstagramFeedByHashtag.feed(HASHTAG, 20) # Make request and store JSON in feed variable
 		#ap feed
 
 		for picture in feed

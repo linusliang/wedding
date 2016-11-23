@@ -1,9 +1,12 @@
 <html>
 	<head>
+		<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
 		<style>
 
 		body {
 			padding-top: 10px;
+			font-family: 'Montserrat', sans-serif;
 		}
 
 		h1 {
@@ -15,7 +18,7 @@
 	   .nopic {
 	        color: black;
 	        text-decoration: bold;
-	        text-align: center;
+	        text-align: justify;
 	    }
 
 	    .pic {
@@ -28,7 +31,7 @@
 	    }
 
 	    .caption {
-	        text-align: center;
+	        text-align: justify;
 	        width:350px;
 	        height:350px;
 	        overflow: hidden;
@@ -45,7 +48,7 @@
 
 	<body>
 
-		<div><h1>New Pics</h1></div>
+		<div><h1>New Pictures</h1></div>
 
 		<% if @new_pics.empty? %>
 			<div class="nopic">No New Pictures</div>
@@ -59,9 +62,9 @@
 		<% end %>
 
 
-		<div><h1>Old Pics</h1></div>
+		<div><h1>Recent Pictures</h1></div>
 		<% if @old_pics.empty? %>
-			<div class="nopic">No Old Pictures</div>
+			<div class="nopic">No Recent Pictures</div>
 		<% else %>
 			<% for pic in @old_pics do %>
 				<div class="pic">
