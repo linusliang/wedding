@@ -3,8 +3,11 @@ class HomeController < ApplicationController
 	require "awesome_print"
 	require "open-uri"
 	require 'instagram_feed_by_hashtag'
+	require 'RMagick'
 
-	HASHTAG = 'gilmoregirls'
+	# KC-18IL / 2.1" x 3.4"
+
+	HASHTAG = 'linusfoundthebesther'
 
 	def index
 		@new_pics = []
@@ -32,9 +35,14 @@ class HomeController < ApplicationController
 				
 			 	@new_pics.push(picture)
 
-				#send picture to printer
-				#
-				#print_pic(p.url, p.pid)
+				#download picture 
+				download_pic(p.url, p.pid)
+
+				#edit picture
+				edit_pic(p.pid)
+
+				#print_picture
+				#print_pic(p.pid)
 
 			# else don't do anything
 			#	
@@ -44,9 +52,20 @@ class HomeController < ApplicationController
 		end
 	end
 
-	def print_pic(link, pid)
+	def download_pic(link, pid)
 		download = open(link)
 		IO.copy_stream(download, "#{Rails.root}/public/" + pid  + '.png')
+	end
+
+	def edit_pic(pid)
+		background = Magick::Image.read("#{Rails.root}/public/background.png").first
+		img = Magick::Image.read("#{Rails.root}/public/" + pid  + '.png').first
+		img = img.resize_to_fill(600)
+		result = background.composite(img, Magick::CenterGravity, Magick::OverCompositeOp)
+		result.write("#{Rails.root}/public/" + pid  + '.png')
+	end
+
+	def print_pic(pid)
 		system("lpr", "#{Rails.root}/public/" + pid  + '.png')
 	end
 end

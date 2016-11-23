@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'instagram'
 gem 'awesome_print'
 gem 'instagram_feed_by_hashtag'
+gem 'rmagick'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.0', '>= 5.0.0.1'
