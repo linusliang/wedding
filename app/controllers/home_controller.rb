@@ -75,7 +75,7 @@ class HomeController < ApplicationController
 
 	def print_pic()
 		pid=params[:pid]
-		system("lpr", "#{Rails.root}/public/" + pid  + '.png')
+		system("lpr", "#{Rails.root}/public/" + pid  + '_print.png')
 		head :ok
 	end
 end
