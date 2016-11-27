@@ -45,6 +45,7 @@
 			setTimeout("location.reload();",60000);
 
 			function print_pic(pid){
+				alert("Reprinting Pic!");
 				var xhr = new XMLHttpRequest();
 				xhr.open('GET', 'http://localhost:3000/home/print_pic/'+pid);
 				xhr.send(null);

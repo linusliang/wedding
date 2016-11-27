@@ -35,7 +35,7 @@ class HomeController < ApplicationController
 						edit_pic(p.pid)
 
 						#print_picture
-						system("lpr", "#{Rails.root}/public/" + p.pid  + '_print.png')
+						system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + p.pid  + '_print.png')
 					rescue
 						# do nothing for now, keep going
 					end
@@ -50,32 +50,21 @@ class HomeController < ApplicationController
 	end
 
 	def edit_pic(pid)
-		background = Magick::Image.read("#{Rails.root}/public/background.png").first
+		background = Magick::Image.read("#{Rails.root}/public/background.jpg").first
 		img = Magick::Image.read("#{Rails.root}/public/" + pid  + '.png').first
 
-		# 2x3 is 600, 3x4 is 900, 4x6 is 1200 
-		img = img.resize_to_fill(900)
+		img = img.resize_to_fill(1260)
 
-		# merge to two pics
-		result = background.composite(img, Magick::CenterGravity, Magick::OverCompositeOp)
-		
-		# write new pictures
-		result.write("#{Rails.root}/public/" + pid  + '.png')
-		format_pic_for_double_printing(pid)
-	end
+		background = background.composite(img, 163, 180, Magick::OverCompositeOp)
+		background = background.composite(img, 1614, 180, Magick::OverCompositeOp)
+		background.rotate!(90)
+		background.write("#{Rails.root}/public/" + pid  + '_print.png')
 
-	def format_pic_for_double_printing(pid)
-		canvas = Magick::Image.new(1800, 1200)
-		img = Magick::Image.read("#{Rails.root}/public/" + pid  + '.png').first
-		canvas.composite!(img, 0, 0, Magick::OverCompositeOp)
-		canvas.composite!(img, 900, 0, Magick::OverCompositeOp)
-		canvas.rotate!(90)
-		canvas.write("#{Rails.root}/public/" + pid  + '_print.png')
 	end
 
 	def print_pic()
 		pid=params[:pid]
-		system("lpr", "#{Rails.root}/public/" + pid  + '_print.png')
+		system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + pid  + '_print.png')
 		head :ok
 	end
 end
