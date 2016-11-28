@@ -35,7 +35,7 @@ class HomeController < ApplicationController
 						edit_pic(p.pid)
 
 						#print_picture
-						system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + p.pid  + '_print.png')
+						system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + p.pid  + '_print.jpg')
 					rescue
 						# do nothing for now, keep going
 					end
@@ -55,16 +55,16 @@ class HomeController < ApplicationController
 
 		img = img.resize_to_fill(1260)
 
-		background = background.composite(img, 163, 180, Magick::OverCompositeOp)
-		background = background.composite(img, 1614, 180, Magick::OverCompositeOp)
+		background = background.composite(img, 130, 200, Magick::OverCompositeOp)
+		background = background.composite(img, 1588, 200, Magick::OverCompositeOp)
 		background.rotate!(90)
-		background.write("#{Rails.root}/public/" + pid  + '_print.png')
+		background.write("#{Rails.root}/public/" + pid  + '_print.jpg')
 
 	end
 
 	def print_pic()
 		pid=params[:pid]
-		system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + pid  + '_print.png')
+		system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + pid  + '_print.jpg')
 		head :ok
 	end
 end
