@@ -30,8 +30,8 @@ class HomeController < ApplicationController
 						#download picture, edit pic, and then print pic
 						download_pic(p.url, p.pid)
 						edit_pic(p.pid)
-						params[:pid]=p.pid
-						#print_pic()
+						sleep(1.seconds)
+						print_pic_with_pid(p.pid)
 					rescue
 						# do nothing for now, keep going
 					end
@@ -52,9 +52,13 @@ class HomeController < ApplicationController
 
 		# open the background and then merge the img into it
 		background = Magick::Image.read("#{Rails.root}/public/background.jpg").first
-		background = background.composite(img, 145, 220, Magick::OverCompositeOp)
-		background = background.composite(img, 1588, 220, Magick::OverCompositeOp)
+		background = background.composite(img, 135, 220, Magick::OverCompositeOp)
+		background = background.composite(img, 1581, 220, Magick::OverCompositeOp)
 		background.write("#{Rails.root}/public/" + pid  + '_print.jpg')
+	end
+
+	def print_pic_with_pid(pid)
+		system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + pid  + '_print.jpg')
 	end
 
 	def print_pic()
