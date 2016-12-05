@@ -13,7 +13,6 @@ class HomeController < ApplicationController
 		@new_pics = []
 		feed = InstagramFeedByHashtag.feed(HASHTAG, 20) # Make request and store JSON in feed variable
 		for picture in feed
-
 			# if there is a new picture, save it to the database and print it out
 			if Picture.find_by_pid(picture['id']).nil?
 				if !picture['id'].nil? && !picture['display_src'].nil? && !picture['id'].nil?
@@ -28,14 +27,11 @@ class HomeController < ApplicationController
 				 	@new_pics.push(picture)
 
 					begin
-						#download picture 
+						#download picture, edit pic, and then print pic
 						download_pic(p.url, p.pid)
-
-						#edit picture
 						edit_pic(p.pid)
-
-						#print_picture
-						system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + p.pid  + '_print.jpg')
+						params[:pid]=p.pid
+						#print_pic()
 					rescue
 						# do nothing for now, keep going
 					end
@@ -50,16 +46,15 @@ class HomeController < ApplicationController
 	end
 
 	def edit_pic(pid)
-		background = Magick::Image.read("#{Rails.root}/public/background.jpg").first
+		# read the image
 		img = Magick::Image.read("#{Rails.root}/public/" + pid  + '.png').first
-
 		img = img.resize_to_fill(1260)
 
-		background = background.composite(img, 130, 200, Magick::OverCompositeOp)
-		background = background.composite(img, 1588, 200, Magick::OverCompositeOp)
-		background.rotate!(90)
+		# open the background and then merge the img into it
+		background = Magick::Image.read("#{Rails.root}/public/background.jpg").first
+		background = background.composite(img, 145, 220, Magick::OverCompositeOp)
+		background = background.composite(img, 1588, 220, Magick::OverCompositeOp)
 		background.write("#{Rails.root}/public/" + pid  + '_print.jpg')
-
 	end
 
 	def print_pic()
