@@ -4,13 +4,19 @@ class HomeController < ApplicationController
 	require 'instagram_feed_by_hashtag'
 	require 'RMagick'
 
-	HASHTAG = 'linusfoundthebesther'
+	HASHTAG = 'tagprintshare'
 
-	def index
+	def index	
 		@old_pics = Picture.order(created_at: :desc)
 		p @old_pics #force an eager load
 
 		@new_pics = []
+		begin
+			feed = InstagramFeedByHashtag.feed(HASHTAG, 20) # Make request and store JSON in feed variable
+		rescue
+			# do nothing for now, keep going
+		end
+
 		feed = InstagramFeedByHashtag.feed(HASHTAG, 20) # Make request and store JSON in feed variable
 		for picture in feed
 			# if there is a new picture, save it to the database and print it out
@@ -58,12 +64,14 @@ class HomeController < ApplicationController
 	end
 
 	def print_pic_with_pid(pid)
-		system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + pid  + '_print.jpg')
+		#system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + pid  + '_print.jpg')
+		PhotoMailer.email_photo(pid).deliver
 	end
 
 	def print_pic()
 		pid=params[:pid]
-		system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + pid  + '_print.jpg')
+		PhotoMailer.email_photo(pid).deliver
+		#system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + pid  + '_print.jpg')
 		head :ok
 	end
 end
