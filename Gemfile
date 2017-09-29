@@ -58,3 +58,4 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'cloudprint'
 gem 'mailgun-ruby', '~>1.0.2', require: 'mailgun'
 gem "figaro"
+gem 'aws-sdk'
