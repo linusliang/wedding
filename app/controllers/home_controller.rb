@@ -1,12 +1,20 @@
 class HomeController < ApplicationController
+#Umj+fDcsEMJnC02MbeNJaVoSDJDq2oP3hYEzoBlP
+#AKIAJ5LHIKFE2RFTEARQ
 
 	require "open-uri"
 	require 'instagram_feed_by_hashtag'
 	require 'RMagick'
+	require 'aws-sdk'
 
 	HASHTAG = 'tagprintshare'
+	s3 = Aws::S3::Resource.new(region: 'us-west-1')
+	s3 = Aws::S3::Client.new(access_key_id: 'AKIAJ5LHIKFE2RFTEARQ', secret_access_key: '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')
 
-	def index	
+	def index
+		
+		#s3 = Aws::S3::Client.new
+
 		@old_pics = Picture.order(created_at: :desc)
 		p @old_pics #force an eager load
 
@@ -47,6 +55,8 @@ class HomeController < ApplicationController
 	end
 
 	def download_pic(link, pid)
+
+
 		download = open(link)
 		IO.copy_stream(download, "#{Rails.root}/public/" + pid  + '.png')
 	end
@@ -65,12 +75,12 @@ class HomeController < ApplicationController
 
 	def print_pic_with_pid(pid)
 		#system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + pid  + '_print.jpg')
-		PhotoMailer.email_photo(pid).deliver
+		#PhotoMailer.email_photo(pid).deliver
 	end
 
 	def print_pic()
 		pid=params[:pid]
-		PhotoMailer.email_photo(pid).deliver
+		#PhotoMailer.email_photo(pid).deliver
 		#system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + pid  + '_print.jpg')
 		head :ok
 	end
