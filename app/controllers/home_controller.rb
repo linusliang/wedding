@@ -8,8 +8,12 @@ class HomeController < ApplicationController
 	require 'aws-sdk'
 
 	HASHTAG = 'tagprintshare'
-	s3 = Aws::S3::Resource.new(region: 'us-west-1')
-	s3 = Aws::S3::Client.new(access_key_id: 'AKIAJ5LHIKFE2RFTEARQ', secret_access_key: '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')
+	#s3 = Aws::S3::Resource.new(region: 'us-west-1')
+	#s3 = Aws::S3::Client.new(access_key_id: 'AKIAJ5LHIKFE2RFTEARQ', secret_access_key: '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')
+
+	Aws.config.update({
+	   credentials: Aws::Credentials.new('AKIAJ5LHIKFE2RFTEARQ', 'Umj+fDcsEMJnC02MbeNJaVoSDJDq2oP3hYEzoBlP')
+	})
 
 	def index
 		
