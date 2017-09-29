@@ -633,7 +633,7 @@ PLATFORMS
 
 DEPENDENCIES
   awesome_print
-  aws-sdk
+  aws-sdk (~> 3)
   byebug
   cloudprint
   coffee-rails (~> 4.2)
