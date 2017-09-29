@@ -63,7 +63,7 @@
 		<% else %>
 			<% for pic in @new_pics do %>
 				<div class="pic">
-				  <div><img height="200" src='<%= pic['display_src'] %>'></img></div>
+				  <div><img height="200" src='https://s3-us-west-1.amazonaws.com/tagprintshare/<%= pic['pid']%>.png' ></img></div>
 				  <div class="caption"><%= pic['caption'] %></div>
 				</div>
 			<% end %>
@@ -75,7 +75,7 @@
 		<% else %>
 			<% for pic in @old_pics do %>
 				<div class="pic">
-				  <div ><img height="200" src='<%= "http://localhost:3000/" + pic['pid'] + ".png" %>' onclick="print_pic('<%=pic['pid']%>')" onMouseOver="this.style.cursor='pointer'"></img></div>
+				  <div ><img height="200" src='<%= "https://s3-us-west-1.amazonaws.com/tagprintshare/" + pic['pid'] + ".png" %>' onclick="print_pic('<%=pic['pid']%>')" onMouseOver="this.style.cursor='pointer'"></img></div>
 				  <div class="caption"><%= pic['caption'] %></div>
 				</div>
 			<% end %>

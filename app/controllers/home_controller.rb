@@ -8,17 +8,13 @@ class HomeController < ApplicationController
 	require 'aws-sdk'
 
 	HASHTAG = 'tagprintshare'
-	#s3 = Aws::S3::Resource.new(region: 'us-west-1')
-	#s3 = Aws::S3::Client.new(access_key_id: 'AKIAJ5LHIKFE2RFTEARQ', secret_access_key: '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')
 
 	Aws.config.update({
-	   credentials: Aws::Credentials.new('AKIAJ5LHIKFE2RFTEARQ', 'Umj+fDcsEMJnC02MbeNJaVoSDJDq2oP3hYEzoBlP')
+		region: 'us-west-1',
+		credentials: Aws::Credentials.new('AKIAJ5LHIKFE2RFTEARQ', 'Umj+fDcsEMJnC02MbeNJaVoSDJDq2oP3hYEzoBlP')
 	})
 
 	def index
-		
-		#s3 = Aws::S3::Client.new
-
 		@old_pics = Picture.order(created_at: :desc)
 		p @old_pics #force an eager load
 
@@ -47,7 +43,7 @@ class HomeController < ApplicationController
 					begin
 						#download picture, edit pic, and then print pic
 						download_pic(p.url, p.pid)
-						edit_pic(p.pid)
+						#edit_pic(p.pid)
 						sleep(1.seconds)
 						print_pic_with_pid(p.pid)
 					rescue
@@ -60,9 +56,14 @@ class HomeController < ApplicationController
 
 	def download_pic(link, pid)
 
-
+		# Save File to S3
+		s3 = Aws::S3::Resource.new
+		bucket = s3.bucket('tagprintshare')
 		download = open(link)
-		IO.copy_stream(download, "#{Rails.root}/public/" + pid  + '.png')
+		obj = bucket.object(pid  + '.png')      
+		obj.upload_file(download)
+
+		#IO.copy_stream(download, "#{Rails.root}/public/" + pid  + '.png')
 	end
 
 	def edit_pic(pid)
