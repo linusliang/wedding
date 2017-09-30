@@ -80,6 +80,7 @@ class HomeController < ApplicationController
 		bucket = s3.bucket('tagprintshare')
 		obj = bucket.object(pid  + '_print.png')      
 		obj.upload_file(pid  + '_print.jpg')
+		
 	end
 
 	def print_pic_with_pid(pid)
