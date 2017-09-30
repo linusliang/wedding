@@ -68,11 +68,11 @@ class HomeController < ApplicationController
 
 	def edit_pic(pid)
 		# read the image
-		img = Magick::Image.read("https://s3-us-west-1.amazonaws.com/tagprintshare/tagprintshare/" + pid  + '.png').first
+		img = Magick::Image.read("https://s3-us-west-1.amazonaws.com/tagprintshare/" + pid  + '.png').first
 		img = img.resize_to_fill(1260)
 
 		# open the background and then merge the img into it
-		background = Magick::Image.read("https://s3-us-west-1.amazonaws.com/tagprintshare/tagprintshare/background.jpg").first
+		background = Magick::Image.read("https://s3-us-west-1.amazonaws.com/tagprintshare/background.jpg").first
 		background = background.composite(img, 135, 220, Magick::OverCompositeOp)
 		background = background.composite(img, 1581, 220, Magick::OverCompositeOp)
 
