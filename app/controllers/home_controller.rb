@@ -68,24 +68,31 @@ class HomeController < ApplicationController
 
 	def edit_pic(pid)
 		# read the image
-		img = Magick::Image.read("#{Rails.root}/public/" + pid  + '.png').first
+		img = Magick::Image.read("https://s3-us-west-1.amazonaws.com/tagprintshare/tagprintshare/" + pid  + '.png').first
 		img = img.resize_to_fill(1260)
 
 		# open the background and then merge the img into it
-		background = Magick::Image.read("#{Rails.root}/public/background.jpg").first
+		background = Magick::Image.read("https://s3-us-west-1.amazonaws.com/tagprintshare/tagprintshare/background.jpg").first
 		background = background.composite(img, 135, 220, Magick::OverCompositeOp)
 		background = background.composite(img, 1581, 220, Magick::OverCompositeOp)
-		background.write("#{Rails.root}/public/" + pid  + '_print.jpg')
+
+		s3 = Aws::S3::Resource.new
+		bucket = s3.bucket('tagprintshare')
+		obj = bucket.object(pid  + '_print.png')      
+		obj.upload_file(background.write)
+		#background.write("https://s3-us-west-1.amazonaws.com/tagprintshare/tagprintshare/" + pid  + '_print.jpg')
 	end
 
 	def print_pic_with_pid(pid)
-		#system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + pid  + '_print.jpg')
 		#PhotoMailer.email_photo(pid).deliver
+
+		#system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + pid  + '_print.jpg')
 	end
 
 	def print_pic()
 		pid=params[:pid]
 		#PhotoMailer.email_photo(pid).deliver
+
 		#system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + pid  + '_print.jpg')
 		head :ok
 	end
