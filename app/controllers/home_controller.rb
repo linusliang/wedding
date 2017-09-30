@@ -1,6 +1,4 @@
 class HomeController < ApplicationController
-#Umj+fDcsEMJnC02MbeNJaVoSDJDq2oP3hYEzoBlP
-#AKIAJ5LHIKFE2RFTEARQ
 
 	require "open-uri"
 	require 'instagram_feed_by_hashtag'
@@ -43,7 +41,7 @@ class HomeController < ApplicationController
 					begin
 						#download picture, edit pic, and then print pic
 						download_pic(p.url, p.pid)
-						#edit_pic(p.pid)
+						edit_pic(p.pid)
 						sleep(1.seconds)
 						print_pic_with_pid(p.pid)
 					rescue
@@ -67,6 +65,7 @@ class HomeController < ApplicationController
 	end
 
 	def edit_pic(pid)
+
 		# read the image
 		img = Magick::Image.read("https://s3-us-west-1.amazonaws.com/tagprintshare/" + pid  + '.png').first
 		img = img.resize_to_fill(1260)
@@ -75,12 +74,12 @@ class HomeController < ApplicationController
 		background = Magick::Image.read("https://s3-us-west-1.amazonaws.com/tagprintshare/background.jpg").first
 		background = background.composite(img, 135, 220, Magick::OverCompositeOp)
 		background = background.composite(img, 1581, 220, Magick::OverCompositeOp)
+		background.write(pid  + '_print.jpg')
 
 		s3 = Aws::S3::Resource.new
 		bucket = s3.bucket('tagprintshare')
 		obj = bucket.object(pid  + '_print.png')      
-		obj.upload_file(background.write)
-		#background.write("https://s3-us-west-1.amazonaws.com/tagprintshare/tagprintshare/" + pid  + '_print.jpg')
+		obj.upload_file(pid  + '_print.jpg')
 	end
 
 	def print_pic_with_pid(pid)
