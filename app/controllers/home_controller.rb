@@ -74,25 +74,34 @@ class HomeController < ApplicationController
 
 		# read the image
 		Rails.logger.debug "read the image"
-		img = Magick::Image.read("https://s3-us-west-1.amazonaws.com/tagprintshare/" + pid  + '.png').first
-		img = img.resize_to_fill(1260)
 
-		# open the background and then merge the img into it
-		Rails.logger.debug "open the background and then merge the img into it"
+		begin
+			img = Magick::Image.read("https://s3-us-west-1.amazonaws.com/tagprintshare/" + pid  + '.png').first
+			img = img.resize_to_fill(1260)
 
-		background = Magick::Image.read("https://s3-us-west-1.amazonaws.com/tagprintshare/background.jpg").first
-		background = background.composite(img, 135, 220, Magick::OverCompositeOp)
-		background = background.composite(img, 1581, 220, Magick::OverCompositeOp)
-		#background.write(#{Rails.root}/public/" + pid  + '_print.png')
+			# open the background and then merge the img into it
+			Rails.logger.debug "open the background and then merge the img into it"
 
-		# upload image to S3
-		Rails.logger.debug "upload image to S3"
+			background = Magick::Image.read("https://s3-us-west-1.amazonaws.com/tagprintshare/background.jpg").first
+			background = background.composite(img, 135, 220, Magick::OverCompositeOp)
+			background = background.composite(img, 1581, 220, Magick::OverCompositeOp)
+			#background.write(#{Rails.root}/public/" + pid  + '_print.png')
 
-		s3 = Aws::S3::Resource.new
-		bucket = s3.bucket('tagprintshare')
-		obj = bucket.object(pid  + '_print.jpg')
-		obj.put(body: background.to_blob)
-		Rails.logger.debug "DONE!!!!!!!!!!!!!!!!!!!!!!"
+			# upload image to S3
+			Rails.logger.debug "upload image to S3"
+
+			s3 = Aws::S3::Resource.new
+			bucket = s3.bucket('tagprintshare')
+			obj = bucket.object(pid  + '_print.jpg')
+			obj.put(body: background.to_blob)
+			Rails.logger.debug "DONE!!!!!!!!!!!!!!!!!!!!!!"
+		rescue Exception => e  
+			Rails.logger.debug "ERROR!!!!!!!!!!!!!!!!!!!!!!"
+			Rails.logger.debug e.message  
+		end
+
+
+
 
 	end
 
