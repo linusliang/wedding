@@ -73,7 +73,7 @@ class HomeController < ApplicationController
 	def edit_pic(pid)
 
 		# read the image
-		p "read the image"
+		Rails.logger.debug "read the image"
 		img = Magick::Image.read("https://s3-us-west-1.amazonaws.com/tagprintshare/" + pid  + '.png').first
 		img = img.resize_to_fill(1260)
 
