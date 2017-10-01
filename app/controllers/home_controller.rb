@@ -40,9 +40,14 @@ class HomeController < ApplicationController
 
 					begin
 						#download picture, edit pic, and then print pic
+						p "download pic"
 						download_pic(p.url, p.pid)
+
+						p "edit pic"
 						edit_pic(p.pid)
 						sleep(1.seconds)
+
+						p "print pic"
 						print_pic_with_pid(p.pid)
 					rescue
 						# do nothing for now, keep going
@@ -73,7 +78,7 @@ class HomeController < ApplicationController
 		img = img.resize_to_fill(1260)
 
 		# open the background and then merge the img into it
-		p "# open the background and then merge the img into it"
+		p "open the background and then merge the img into it"
 
 		background = Magick::Image.read("https://s3-us-west-1.amazonaws.com/tagprintshare/background.jpg").first
 		background = background.composite(img, 135, 220, Magick::OverCompositeOp)
