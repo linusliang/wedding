@@ -68,16 +68,21 @@ class HomeController < ApplicationController
 	def edit_pic(pid)
 
 		# read the image
+		p "read the image"
 		img = Magick::Image.read("https://s3-us-west-1.amazonaws.com/tagprintshare/" + pid  + '.png').first
 		img = img.resize_to_fill(1260)
 
 		# open the background and then merge the img into it
+		p "# open the background and then merge the img into it"
+
 		background = Magick::Image.read("https://s3-us-west-1.amazonaws.com/tagprintshare/background.jpg").first
 		background = background.composite(img, 135, 220, Magick::OverCompositeOp)
 		background = background.composite(img, 1581, 220, Magick::OverCompositeOp)
 		#background.write(#{Rails.root}/public/" + pid  + '_print.png')
 
 		# upload image to S3
+		p "upload image to S3"
+
 		s3 = Aws::S3::Resource.new
 		bucket = s3.bucket('tagprintshare')
 		obj = bucket.object(pid  + '_print.jpg')
