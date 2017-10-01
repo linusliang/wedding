@@ -40,14 +40,14 @@ class HomeController < ApplicationController
 
 					begin
 						#download picture, edit pic, and then print pic
-						p "download pic"
+						Rails.logger.debug "download pic"
 						download_pic(p.url, p.pid)
 
-						p "edit pic"
+						Rails.logger.debug "edit pic"
 						edit_pic(p.pid)
 						sleep(1.seconds)
 
-						p "print pic"
+						Rails.logger.debug "print pic"
 						print_pic_with_pid(p.pid)
 					rescue
 						# do nothing for now, keep going
