@@ -48,7 +48,7 @@ class HomeController < ApplicationController
 						sleep(1.seconds)
 
 						Rails.logger.debug "print pic"
-						print_pic_with_pid(p.pid)
+						#print_pic_with_pid(p.pid)
 					rescue
 						# do nothing for now, keep going
 					end
