@@ -54,10 +54,11 @@ class HomeController < ApplicationController
 
 	def download_pic(link, pid)
 
+		download = open(link)
+		
 		# Save File to S3
 		s3 = Aws::S3::Resource.new
 		bucket = s3.bucket('tagprintshare')
-		download = open(link)
 		obj = bucket.object(pid  + '.png')      
 		obj.upload_file(download)
 
@@ -74,18 +75,18 @@ class HomeController < ApplicationController
 		background = Magick::Image.read("https://s3-us-west-1.amazonaws.com/tagprintshare/background.jpg").first
 		background = background.composite(img, 135, 220, Magick::OverCompositeOp)
 		background = background.composite(img, 1581, 220, Magick::OverCompositeOp)
-		background.write(pid  + '_print.jpg')
+		#background.write(#{Rails.root}/public/" + pid  + '_print.png')
 
+		# upload image to S3
 		s3 = Aws::S3::Resource.new
 		bucket = s3.bucket('tagprintshare')
-		obj = bucket.object(pid  + '_print.png')      
-		obj.upload_file(pid  + '_print.jpg')
-		
+		obj = bucket.object(pid  + '_print.jpg')
+		obj.put(body: background.to_blob)
+
 	end
 
 	def print_pic_with_pid(pid)
-		#PhotoMailer.email_photo(pid).deliver
-
+		PhotoMailer.email_photo(pid).deliver
 		#system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + pid  + '_print.jpg')
 	end
 

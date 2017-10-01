@@ -1,26 +1,36 @@
 class PhotoMailer < ApplicationMailer
+	require 'open-uri'
+	require 'aws-sdk'
+	require 'tempfile'
 	default from: ENV['username']
 
 	def email_photo(pid)
 		mg_client = Mailgun::Client.new ENV['api_key']
-		mb_obj = Mailgun::MessageBuilder.new()
+		mg_obj = Mailgun::MessageBuilder.new()
 
 		# Define the from address
-		mb_obj.set_from_address(ENV['username'], {"first"=>"Linus", "last" => "Liang"});  
+		mg_obj.set_from_address(ENV['username'], {"first"=>"Linus", "last" => "Liang"})
 
 		# Define a to recipient
-		mb_obj.add_recipient(:to, "pve88645jh7ij8@print.epsonconnect.com");  
+		#mb_obj.add_recipient(:to, "pve88645jh7ij8@print.epsonconnect.com");  
+		mg_obj.add_recipient(:to, "linusliang@gmail.com")
 
 		# Define the subject + body
-		mb_obj.set_subject("Instagram Picture");  
-		mb_obj.set_text_body("body");
+		mg_obj.set_subject(pid)  
+		mg_obj.set_text_body(pid)
 
-		# Attach a file and rename it
-		mb_obj.add_attachment("#{Rails.root}/public/" + pid + '_print.jpg');
+		begin
+			download = open("https://s3-us-west-1.amazonaws.com/tagprintshare/" + pid  + '_print.jpg')
+		    tempfile = Tempfile.new(['hello', '.jpg'])
+    		IO.copy_stream(download, tempfile.path)
+			mg_obj.add_attachment(tempfile.path, pid + "_print.jpg")
+
+		rescue Exception => e  
+			puts e.message  
+		end
 
 		# Finally, send your message using the client
-		result = mg_client.send_message(ENV['domain'], mb_obj)
-		puts result.body.to_s
+		result = mg_client.send_message(ENV['domain'], mg_obj)
 
 	end
 end
