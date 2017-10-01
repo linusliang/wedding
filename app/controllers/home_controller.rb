@@ -42,7 +42,8 @@ class HomeController < ApplicationController
 						#download picture, edit pic, and then print pic
 						Rails.logger.debug "download pic"
 						download_pic(p.url, p.pid)
-
+						sleep(5.seconds)
+						
 						Rails.logger.debug "edit pic"
 						edit_pic(p.pid)
 						sleep(1.seconds)
