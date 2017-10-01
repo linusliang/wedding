@@ -78,7 +78,7 @@ class HomeController < ApplicationController
 		img = img.resize_to_fill(1260)
 
 		# open the background and then merge the img into it
-		p "open the background and then merge the img into it"
+		Rails.logger.debug "open the background and then merge the img into it"
 
 		background = Magick::Image.read("https://s3-us-west-1.amazonaws.com/tagprintshare/background.jpg").first
 		background = background.composite(img, 135, 220, Magick::OverCompositeOp)
@@ -86,12 +86,13 @@ class HomeController < ApplicationController
 		#background.write(#{Rails.root}/public/" + pid  + '_print.png')
 
 		# upload image to S3
-		p "upload image to S3"
+		Rails.logger.debug "upload image to S3"
 
 		s3 = Aws::S3::Resource.new
 		bucket = s3.bucket('tagprintshare')
 		obj = bucket.object(pid  + '_print.jpg')
 		obj.put(body: background.to_blob)
+		Rails.logger.debug "DONE!!!!!!!!!!!!!!!!!!!!!!"
 
 	end
 
