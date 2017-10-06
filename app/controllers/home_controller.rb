@@ -42,7 +42,7 @@ class HomeController < ApplicationController
 						#download picture, edit pic, and then print pic
 						Rails.logger.debug "download pic"
 						download_pic(p.url, p.pid)
-						sleep(3.seconds)
+						sleep(1.seconds)
 
 						Rails.logger.debug "edit pic"
 						edit_pic(p.pid)
@@ -73,16 +73,24 @@ class HomeController < ApplicationController
 
 	def edit_pic(pid)
 
-		# read the image
-		Rails.logger.debug "read the image"
-
 		begin
+			retries ||= 0
+  			Rails.logger.debug "try ##{ retries }"
+
+			# read the image
+			Rails.logger.debug "read the image"
+
+			#s3 = Aws::S3::Client.new
+			#resp = s3.get_object(bucket:'tagprintshare', key: pid  + '.png')
+			#Rails.logger.debug "!!!!!" + resp.body.read
+			#img = Magick::Image.read(resp.body.read).first
+			#img = img.resize_to_fill(1260)
+
 			img = Magick::Image.read("https://s3-us-west-1.amazonaws.com/tagprintshare/" + pid  + '.png').first
 			img = img.resize_to_fill(1260)
 
-			# open the background and then merge the img into it
+			#open the background and then merge the img into it
 			Rails.logger.debug "open the background and then merge the img into it"
-
 			background = Magick::Image.read("https://s3-us-west-1.amazonaws.com/tagprintshare/background.jpg").first
 			background = background.composite(img, 135, 220, Magick::OverCompositeOp)
 			background = background.composite(img, 1581, 220, Magick::OverCompositeOp)
@@ -90,13 +98,14 @@ class HomeController < ApplicationController
 
 			# upload image to S3
 			Rails.logger.debug "upload image to S3"
-
 			s3 = Aws::S3::Resource.new
 			bucket = s3.bucket('tagprintshare')
 			obj = bucket.object(pid  + '_print.jpg')
 			obj.put(body: background.to_blob)
 			Rails.logger.debug "DONE!!!!!!!!!!!!!!!!!!!!!!"
-		rescue Exception => e  
+
+		rescue Exception => e 
+			retry if (retries += 1) < 5
 			Rails.logger.debug "ERROR!!!!!!!!!!!!!!!!!!!!!!"
 			Rails.logger.debug e.message  
 		end
@@ -107,7 +116,7 @@ class HomeController < ApplicationController
 	end
 
 	def print_pic_with_pid(pid)
-		PhotoMailer.email_photo(pid).deliver
+		#PhotoMailer.email_photo(pid).deliver
 		#system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + pid  + '_print.jpg')
 	end
 
