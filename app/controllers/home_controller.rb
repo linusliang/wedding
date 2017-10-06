@@ -93,14 +93,20 @@ class HomeController < ApplicationController
 			img = Magick::Image.from_blob(resp.body.read).first
 			img = img.resize_to_fill(1260)
 
+			resp = s3.get_object(bucket:'tagprintshare', key:'background.jpg')
+			Rails.logger.debug "open the background and then merge the img into it"
+			background = Magick::Image.from_blob(resp.body.read).first
+			background = background.composite(img, 135, 220, Magick::OverCompositeOp)
+			background = background.composite(img, 1581, 220, Magick::OverCompositeOp)
+			
 			# img = Magick::Image.read("https://s3-us-west-1.amazonaws.com/tagprintshare/" + pid  + '.png').first
 			# img = img.resize_to_fill(1260)
 
 			#open the background and then merge the img into it
-			Rails.logger.debug "open the background and then merge the img into it"
-			background = Magick::Image.read("https://s3-us-west-1.amazonaws.com/tagprintshare/background.jpg").first
-			background = background.composite(img, 135, 220, Magick::OverCompositeOp)
-			background = background.composite(img, 1581, 220, Magick::OverCompositeOp)
+			# Rails.logger.debug "open the background and then merge the img into it"
+			# background = Magick::Image.read("https://s3-us-west-1.amazonaws.com/tagprintshare/background.jpg").first
+			# background = background.composite(img, 135, 220, Magick::OverCompositeOp)
+			# background = background.composite(img, 1581, 220, Magick::OverCompositeOp)
 			#background.write("#{Rails.root}/public/" + pid  + '_print.png')
 
 			# upload image to S3
