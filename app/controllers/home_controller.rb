@@ -67,45 +67,33 @@ class HomeController < ApplicationController
 		bucket = s3.bucket('tagprintshare')
 		obj = bucket.object(pid  + '.png')      
 		obj.upload_file(download)
-
-		#IO.copy_stream(download, "#{Rails.root}/public/" + pid  + '.png')
 	end
 
 	def edit_pic(pid)
-
 		begin
 
 			# read the image
-			Rails.logger.debug "read the image"		
 			s3 = Aws::S3::Client.new
 			resp = s3.get_object(bucket:'tagprintshare', key:pid + '.png')
 			img = Magick::Image.from_blob(resp.body.read).first
 			img = img.resize_to_fill(1260)
 
 			#open the background and then merge the img into it
-			Rails.logger.debug "open the background and then merge the img into it"
 			resp = s3.get_object(bucket:'tagprintshare', key:'background.jpg')
 			background = Magick::Image.from_blob(resp.body.read).first
 			background = background.composite(img, 135, 220, Magick::OverCompositeOp)
 			background = background.composite(img, 1581, 220, Magick::OverCompositeOp)
 
 			# upload image to S3
-			Rails.logger.debug "upload image to S3"
 			s3 = Aws::S3::Resource.new
 			bucket = s3.bucket('tagprintshare')
 			obj = bucket.object(pid  + '_print.jpg')
 			obj.put(body: background.to_blob)
 			
-			Rails.logger.debug "DONE!!!!!!!!!!!!!!!!!!!!!!"
-
 		rescue Exception => e 
-			Rails.logger.debug "ERROR!!!!!!!!!!!!!!!!!!!!!!"
+			Rails.logger.debug "**************** ERROR ****************"
 			Rails.logger.debug e.message  
 		end
-
-
-
-
 	end
 
 	def print_pic_with_pid(pid)
