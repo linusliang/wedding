@@ -75,6 +75,7 @@ class HomeController < ApplicationController
 
 		begin
 			retries ||= 0
+			sleep(retries.seconds)
   			Rails.logger.debug "try ##{ retries }"
 
 			# read the image
