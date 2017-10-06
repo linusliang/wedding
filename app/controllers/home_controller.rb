@@ -4,6 +4,7 @@ class HomeController < ApplicationController
 	require 'instagram_feed_by_hashtag'
 	require 'RMagick'
 	require 'aws-sdk'
+	require 'tempfile'
 
 	HASHTAG = 'tagprintshare'
 
@@ -42,7 +43,7 @@ class HomeController < ApplicationController
 						#download picture, edit pic, and then print pic
 						Rails.logger.debug "download pic"
 						download_pic(p.url, p.pid)
-						sleep(1.seconds)
+						#sleep(1.seconds)
 
 						Rails.logger.debug "edit pic"
 						edit_pic(p.pid)
@@ -75,27 +76,32 @@ class HomeController < ApplicationController
 
 		begin
 			retries ||= 0
-			sleep(retries.seconds)
   			Rails.logger.debug "try ##{ retries }"
 
 			# read the image
 			Rails.logger.debug "read the image"
 
-			#s3 = Aws::S3::Client.new
-			#resp = s3.get_object(bucket:'tagprintshare', key: pid  + '.png')
-			#Rails.logger.debug "!!!!!" + resp.body.read
-			#img = Magick::Image.read(resp.body.read).first
-			#img = img.resize_to_fill(1260)
+			tmpfile = Tempfile.new('foo')
 
-			img = Magick::Image.read("https://s3-us-west-1.amazonaws.com/tagprintshare/" + pid  + '.png').first
+			# s3 = Aws::S3::Resource.new
+			# obj = s3.bucket('tagprintshare').object(pid + '.png')
+			#obj.get(response_target: tmpfile.read.force_encoding(Encoding::UTF_8))
+			
+			s3 = Aws::S3::Client.new
+			resp = s3.get_object(bucket:'tagprintshare', key:pid + '.png')
+
+			img = Magick::Image.from_blob(resp.body.read).first
 			img = img.resize_to_fill(1260)
+
+			# img = Magick::Image.read("https://s3-us-west-1.amazonaws.com/tagprintshare/" + pid  + '.png').first
+			# img = img.resize_to_fill(1260)
 
 			#open the background and then merge the img into it
 			Rails.logger.debug "open the background and then merge the img into it"
 			background = Magick::Image.read("https://s3-us-west-1.amazonaws.com/tagprintshare/background.jpg").first
 			background = background.composite(img, 135, 220, Magick::OverCompositeOp)
 			background = background.composite(img, 1581, 220, Magick::OverCompositeOp)
-			#background.write(#{Rails.root}/public/" + pid  + '_print.png')
+			#background.write("#{Rails.root}/public/" + pid  + '_print.png')
 
 			# upload image to S3
 			Rails.logger.debug "upload image to S3"
@@ -106,9 +112,9 @@ class HomeController < ApplicationController
 			Rails.logger.debug "DONE!!!!!!!!!!!!!!!!!!!!!!"
 
 		rescue Exception => e 
-			retry if (retries += 1) < 5
 			Rails.logger.debug "ERROR!!!!!!!!!!!!!!!!!!!!!!"
 			Rails.logger.debug e.message  
+			retry if (retries += 1) < 1
 		end
 
 
