@@ -20,13 +20,16 @@ class PhotoMailer < ApplicationMailer
 		mg_obj.set_text_body(pid)
 
 		begin
+			Rails.logger.debug "**************** sending file ****************"
+
 			download = open("https://s3-us-west-1.amazonaws.com/tagprintshare/" + pid  + '_print.jpg')
 		    tempfile = Tempfile.new(['hello', '.jpg'])
     		IO.copy_stream(download, tempfile.path)
 			mg_obj.add_attachment(tempfile.path, pid + "_print.jpg")
 
 		rescue Exception => e  
-			puts e.message  
+			Rails.logger.debug "**************** ERROR IN email_photo() ****************"
+			Rails.logger.debug e.message  
 		end
 
 		# Finally, send your message using the client
