@@ -104,6 +104,7 @@ class HomeController < ApplicationController
 	def print_pic()
 		pid=params[:pid]
 		begin
+			Rails.logger.debug "**************** PRINTING " + pid + " ****************"
 			PhotoMailer.email_photo(pid).deliver
 			#system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + pid  + '_print.jpg')
 		rescue Exception => e 
