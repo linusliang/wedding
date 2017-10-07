@@ -7,6 +7,10 @@ class PhotoMailer < ApplicationMailer
 
 	def email_photo(pid)
 		begin
+			Rails.logger.debug "**************** ENV['api_key'] - " + ENV['api_key'] + " ****************"
+			Rails.logger.debug "**************** ENV['username'] - " + ENV['username'] + " ****************"
+
+			
 			mg_client = Mailgun::Client.new ENV['api_key']
 			mg_obj = Mailgun::MessageBuilder.new()
 
