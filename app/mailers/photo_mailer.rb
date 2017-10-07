@@ -26,12 +26,10 @@ class PhotoMailer < ApplicationMailer
 			mg_obj.set_text_body(pid)
 
 			Rails.logger.debug "**************** sending file ****************"
-			# Rails.logger.debug mg_client
-
-			# download = open("https://s3-us-west-1.amazonaws.com/tagprintshare/" + pid  + '_print.jpg')
-		 #    tempfile = Tempfile.new(['hello', '.jpg'])
-   #  		IO.copy_stream(download, tempfile.path)
-			# mg_obj.add_attachment(tempfile.path, pid + "_print.jpg")
+			download = open("https://s3-us-west-1.amazonaws.com/tagprintshare/" + pid  + '_print.jpg')
+		    tempfile = Tempfile.new(['hello', '.jpg'])
+    		IO.copy_stream(download, tempfile.path)
+			mg_obj.add_attachment(tempfile.path, pid + "_print.jpg")
 
 			# Finally, send your message using the client
 			result = mg_client.send_message(ENV['domain'], mg_obj)
