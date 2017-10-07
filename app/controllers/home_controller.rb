@@ -89,9 +89,9 @@ class HomeController < ApplicationController
 			bucket = s3.bucket('tagprintshare')
 			obj = bucket.object(pid  + '_print.jpg')
 			obj.put(body: background.to_blob)
-			
+
 		rescue Exception => e 
-			Rails.logger.debug "**************** ERROR ****************"
+			Rails.logger.debug "**************** ERROR IN EDIT PIC ****************"
 			Rails.logger.debug e.message  
 		end
 	end
@@ -103,9 +103,13 @@ class HomeController < ApplicationController
 
 	def print_pic()
 		pid=params[:pid]
-		#PhotoMailer.email_photo(pid).deliver
-
-		#system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + pid  + '_print.jpg')
+		begin
+			PhotoMailer.email_photo(pid).deliver
+			#system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + pid  + '_print.jpg')
+		rescue Exception => e 
+			Rails.logger.debug "**************** ERROR IN PRINT PIC ****************"
+			Rails.logger.debug e.message  
+		end
 		head :ok
 	end
 end
