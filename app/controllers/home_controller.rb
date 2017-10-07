@@ -97,14 +97,20 @@ class HomeController < ApplicationController
 	end
 
 	def print_pic_with_pid(pid)
-		#PhotoMailer.email_photo(pid).deliver
-		#system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + pid  + '_print.jpg')
+		begin
+			Rails.logger.debug "**************** print_pic_with_pid()" + pid + " ****************"
+			PhotoMailer.email_photo(pid).deliver
+			#system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + pid  + '_print.jpg')
+		rescue Exception => e 
+			Rails.logger.debug "**************** ERROR IN PRINT PIC ****************"
+			Rails.logger.debug e.message  
+		end
 	end
 
 	def print_pic()
 		pid=params[:pid]
 		begin
-			Rails.logger.debug "**************** PRINTING " + pid + " ****************"
+			Rails.logger.debug "**************** PRINTING_PIC()" + pid + " ****************"
 			PhotoMailer.email_photo(pid).deliver
 			#system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + pid  + '_print.jpg')
 		rescue Exception => e 
