@@ -4,6 +4,8 @@ class HomeController < ApplicationController
 	require 'instagram_feed_by_hashtag'
 	require 'RMagick'
 	require 'aws-sdk'
+	require 'mini_magick'
+	require 'tempfile'
 
 	HASHTAG = 'tagprintshare'
 
@@ -75,20 +77,32 @@ class HomeController < ApplicationController
 			# read the image
 			s3 = Aws::S3::Client.new
 			resp = s3.get_object(bucket:'tagprintshare', key:pid + '.png')
-			img = Magick::Image.from_blob(resp.body.read).first
-			img = img.resize_to_fill(1260)
+			tmpimage = Tempfile.new(['image', '.png'])
+			IO.copy_stream(resp.body, tmpimage.path)
+			img = MiniMagick::Image.open(tmpimage.path)
+			img = img.resize("1260")
 
 			#open the background and then merge the img into it
 			resp = s3.get_object(bucket:'tagprintshare', key:'background.jpg')
-			background = Magick::Image.from_blob(resp.body.read).first
-			background = background.composite(img, 135, 220, Magick::OverCompositeOp)
-			background = background.composite(img, 1581, 220, Magick::OverCompositeOp)
+			tmpbackground = Tempfile.new(['background', '.png'])
+			IO.copy_stream(resp.body, tmpbackground.path)
+			background = MiniMagick::Image.open(tmpbackground.path)
 
-			# upload image to S3
+			result = background.composite(img) do |c|
+				  c.compose "Over"    # OverCompositeOp
+				  c.geometry "+135+220" # copy second_image onto first_image from (20, 20)
+			end
+			
+			result = result.composite(img) do |c|
+				  c.compose "Over"    # OverCompositeOp
+				  c.geometry "+1581+220" # copy second_image onto first_image from (20, 20)
+			end
+
+			#upload image to S3
 			s3 = Aws::S3::Resource.new
 			bucket = s3.bucket('tagprintshare')
 			obj = bucket.object(pid  + '_print.jpg')
-			obj.put(body: background.to_blob)
+			obj.put(body: result.to_blob)
 
 		rescue Exception => e 
 			Rails.logger.debug "**************** ERROR IN EDIT PIC ****************"

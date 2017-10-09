@@ -530,6 +530,7 @@ GEM
       rest-client (~> 1.6)
     method_source (0.8.2)
     mime-types (2.99.3)
+    mini_magick (4.8.0)
     mini_portile2 (2.3.0)
     minitest (5.10.3)
     multi_json (1.12.2)
@@ -644,6 +645,7 @@ DEPENDENCIES
   jquery-rails
   listen (~> 3.0.5)
   mailgun-ruby (~> 1.0.2)
+  mini_magick
   mysql2
   pg
   puma (~> 3.0)
