@@ -15,48 +15,45 @@ class HomeController < ApplicationController
 	})
 
 	def index
-		@old_pics = Picture.order(created_at: :desc)
-		p @old_pics #force an eager load
 
-		@new_pics = []
 		begin
+
+			@old_pics = Picture.order(created_at: :desc)
+			p @old_pics #force an eager load
+
+			@new_pics = []
 			feed = InstagramFeedByHashtag.feed(HASHTAG, 20) # Make request and store JSON in feed variable
-		rescue
-			# do nothing for now, keep going
-		end
 
-		feed = InstagramFeedByHashtag.feed(HASHTAG, 20) # Make request and store JSON in feed variable
-		for picture in feed
-			# if there is a new picture, save it to the database and print it out
-			if Picture.find_by_pid(picture['id']).nil?
-				if !picture['id'].nil? && !picture['display_src'].nil? && !picture['id'].nil?
-					p = Picture.new
-					p.url = picture['display_src']
-					unless picture['caption'].nil?
-						p.caption =	picture['caption'][0..200].scrub
-					end	
-					p.pid = picture['id']
-					p.save
+			for picture in feed
+
+				# if there is a new picture, save it to the database and print it out
+				if Picture.find_by_pid(picture['id']).nil?
+					if !picture['id'].nil? && !picture['display_src'].nil? && !picture['id'].nil?
+						p = Picture.new
+						p.url = picture['display_src']
+						unless picture['caption'].nil?
+							p.caption =	picture['caption'][0..200].scrub
+						end	
+						p.pid = picture['id']
+						p.save
+						
+					 	@new_pics.push(p)
 					
-				 	@new_pics.push(picture)
-
-					begin
 						#download picture, edit pic, and then print pic
 						Rails.logger.debug "download pic"
 						download_pic(p.url, p.pid)
-						#sleep(1.seconds)
 
 						Rails.logger.debug "edit pic"
 						edit_pic(p.pid)
-						#sleep(1.seconds)
 
 						Rails.logger.debug "print pic"
 						print_pic_with_pid(p.pid)
-					rescue
-						# do nothing for now, keep going
 					end
 				end
 			end
+		rescue Exception => e 
+			Rails.logger.debug "**************** ERROR IN INDEX ****************"
+			Rails.logger.debug e.message  		
 		end
 	end
 
