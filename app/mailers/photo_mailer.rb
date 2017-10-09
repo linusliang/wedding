@@ -14,16 +14,18 @@ class PhotoMailer < ApplicationMailer
 			mg_obj.set_from_address(ENV['username'], {"first"=>"Linus", "last" => "Liang"})
 
 			# Define a to recipient
-			mg_obj.add_recipient(:to, "pve88645jh7ij8@print.epsonconnect.com");  
-			#mg_obj.add_recipient(:to, "linusliang@gmail.com")
+			#mg_obj.add_recipient(:to, "pve88645jh7ij8@print.epsonconnect.com");  
+			mg_obj.add_recipient(:to, "linusliang@gmail.com")
 
 			# Define the subject + body
 			mg_obj.set_subject(pid)  
 			mg_obj.set_text_body(pid)
 
-			download = open("https://s3-us-west-1.amazonaws.com/tagprintshare/" + pid  + '_print.jpg')
+			# read the image
+			s3 = Aws::S3::Client.new
+			resp = s3.get_object(bucket:'tagprintshare', key:pid + '_print.jpg')
 		    tempfile = Tempfile.new(['hello', '.jpg'])
-    		IO.copy_stream(download, tempfile.path)
+    		IO.copy_stream(resp.body, tempfile.path)
 			mg_obj.add_attachment(tempfile.path, pid + "_print.jpg")
 
 			# Finally, send your message using the client

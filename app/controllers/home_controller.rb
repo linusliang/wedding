@@ -46,7 +46,7 @@ class HomeController < ApplicationController
 
 						Rails.logger.debug "edit pic"
 						edit_pic(p.pid)
-						sleep(1.seconds)
+						#sleep(1.seconds)
 
 						Rails.logger.debug "print pic"
 						print_pic_with_pid(p.pid)
@@ -101,7 +101,7 @@ class HomeController < ApplicationController
 			PhotoMailer.email_photo(pid).deliver
 			#system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + pid  + '_print.jpg')
 		rescue Exception => e 
-			Rails.logger.debug "**************** ERROR IN PRINT PIC ****************"
+			Rails.logger.debug "**************** ERROR IN PRINT PIC WITH PID****************"
 			Rails.logger.debug e.message  
 		end
 	end
