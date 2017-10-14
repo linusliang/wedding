@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   get '/oauth/callback', :to => "home#callback"
   get '/menu', :to => "home#menu"
   get '/home/print_pic/:pid', :to => "home#print_pic", pid: :pid
+  get '/print_new_pics/', :to => "home#print_new_pics"
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

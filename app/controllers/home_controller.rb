@@ -14,13 +14,8 @@ class HomeController < ApplicationController
 		credentials: Aws::Credentials.new('AKIAJ5LHIKFE2RFTEARQ', 'Umj+fDcsEMJnC02MbeNJaVoSDJDq2oP3hYEzoBlP')
 	})
 
-	def index
-
+	def print_new_pics
 		begin
-
-			@old_pics = Picture.order(created_at: :desc)
-			p @old_pics #force an eager load
-
 			@new_pics = []
 			feed = InstagramFeedByHashtag.feed(HASHTAG, 20) # Make request and store JSON in feed variable
 
@@ -51,6 +46,17 @@ class HomeController < ApplicationController
 					end
 				end
 			end
+		rescue Exception => e 
+			Rails.logger.debug "**************** ERROR IN print_new_pics ****************"
+			Rails.logger.debug e.message  		
+		end
+		head :ok
+	end
+
+	def index
+		begin
+			@old_pics = Picture.order(created_at: :desc)
+			p @old_pics #force an eager load
 		rescue Exception => e 
 			Rails.logger.debug "**************** ERROR IN INDEX ****************"
 			Rails.logger.debug e.message  		
