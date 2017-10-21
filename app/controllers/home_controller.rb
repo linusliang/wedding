@@ -7,7 +7,7 @@ class HomeController < ApplicationController
 	require 'mini_magick'
 	require 'tempfile'
 
-	HASHTAG = 'cars'
+	HASHTAG = 'sanfrancisco'
 
 	Aws.config.update({
 		region: 'us-west-1',
