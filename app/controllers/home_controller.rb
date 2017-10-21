@@ -42,7 +42,7 @@ class HomeController < ApplicationController
 						edit_pic(p.pid)
 
 						Rails.logger.debug "print pic"
-						print_pic_with_pid(p.pid)
+						#print_pic_with_pid(p.pid)
 					end
 				end
 			end
