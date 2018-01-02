@@ -7,7 +7,7 @@ class HomeController < ApplicationController
 	require 'mini_magick'
 	require 'tempfile'
 
-	$hashtag = 'instaprinter'
+	$hashtag = 'instaprinterfun'
 
 	Aws.config.update({
 		region: 'us-west-1',
@@ -41,8 +41,8 @@ class HomeController < ApplicationController
 						Rails.logger.debug "edit pic"
 						edit_pic(p.pid)
 
-						Rails.logger.debug "print pic"
-						if [:print_flag] != "false"
+						if params[:print_flag] != "false"
+							Rails.logger.debug "print pic"
 							print_pic_with_pid(p.pid)
 						end
 					end
@@ -88,7 +88,7 @@ class HomeController < ApplicationController
 			img = img.resize("1260")
 
 			#open the background and then merge the img into it
-			resp = s3.get_object(bucket:'tagprintshare', key:'background.jpg')
+			resp = s3.get_object(bucket:'iptemplates', key:'background.jpg')
 			tmpbackground = Tempfile.new(['background', '.png'])
 			IO.copy_stream(resp.body, tmpbackground.path)
 			background = MiniMagick::Image.open(tmpbackground.path)
