@@ -56,9 +56,24 @@ class HomeController < ApplicationController
 	end
 
 	def index
+
 		begin
+
+			# load the pictures
 			@old_pics = Picture.order(created_at: :desc)
 			p @old_pics #force an eager load
+
+			# let user turn script on/off
+			@pid = (`pgrep -f refresh_script.rb`)
+			if params[:switch] == "on" && @pid == ""
+				Rails.logger.debug "turning process on"
+				output = (`nohup ruby /var/app/current/refresh_script.rb > /dev/null &`)
+			elsif params[:switch] == "off"	&& @pid != ""
+				Rails.logger.debug "turning process off"
+				Rails.logger.debug "killing PID -->" + @pid
+				Process.kill('KILL', @pid.to_i)	
+			end
+
 		rescue Exception => e 
 			Rails.logger.debug "**************** ERROR IN INDEX ****************"
 			Rails.logger.debug e.message  		

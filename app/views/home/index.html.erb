@@ -56,6 +56,13 @@
 
 	<body>
 		<div><h1>#<%=$hashtag%></h1></div>
+		<div align="center">
+			<%if @pid != ""%>
+				<%= button_to "Script is ON, turn it OFF?", {:controller => "home", :action => "index", :switch => "off"}%>
+			<%else%>
+				<%= button_to "Script is OFF, turn it ON?", {:controller => "home", :action => "index", :switch => "on"}%>
+			<%end%>
+		</div>
 		<% if @old_pics.empty? %>
 			<div class="nopic">No Old Pictures</div>
 		<% else %>

@@ -3,6 +3,8 @@ Rails.application.routes.draw do
   
   root :to => "home#index"
 
+  post '/', :to =>"home#index"
+  
   get '/oauth/connect', :to => "home#connect"
   get '/oauth/callback', :to => "home#callback"
   get '/menu', :to => "home#menu"
