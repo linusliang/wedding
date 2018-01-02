@@ -8,7 +8,7 @@ class HomeController < ApplicationController
 	require 'tempfile'
 
 	$hashtag = 'instaprint'
-	
+
 	Aws.config.update({
 		region: 'us-west-1',
 		credentials: Aws::Credentials.new('AKIAJ5LHIKFE2RFTEARQ', 'Umj+fDcsEMJnC02MbeNJaVoSDJDq2oP3hYEzoBlP')
