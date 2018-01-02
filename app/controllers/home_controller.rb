@@ -7,8 +7,8 @@ class HomeController < ApplicationController
 	require 'mini_magick'
 	require 'tempfile'
 
-	HASHTAG = 'instaprint'
-
+	$hashtag = 'instaprint'
+	
 	Aws.config.update({
 		region: 'us-west-1',
 		credentials: Aws::Credentials.new('AKIAJ5LHIKFE2RFTEARQ', 'Umj+fDcsEMJnC02MbeNJaVoSDJDq2oP3hYEzoBlP')
@@ -17,7 +17,7 @@ class HomeController < ApplicationController
 	def print_new_pics
 		begin
 			@new_pics = []
-			feed = InstagramFeedByHashtag.feed(HASHTAG, 20) # Make request and store JSON in feed variable
+			feed = InstagramFeedByHashtag.feed($hashtag, 20) # Make request and store JSON in feed variable
 
 			for picture in feed
 
