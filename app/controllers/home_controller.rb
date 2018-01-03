@@ -63,7 +63,7 @@ class HomeController < ApplicationController
 
 						if params[:print_flag] != "false"
 							Rails.logger.debug "print pic"
-							#print_pic_with_pid(p.pid)
+							print_pic_with_pid(p.pid)
 						end
 					end
 				end
