@@ -56,6 +56,7 @@
 
 	<body>
 		<div><h1>#<%=$hashtag%></h1></div>
+
 		<div align="center">
 			<%if @pid != ""%>
 				<%= button_to "Script is ON, turn it OFF?", {:controller => "home", :action => "index", :switch => "off"}%>
@@ -63,15 +64,28 @@
 				<%= button_to "Script is OFF, turn it ON?", {:controller => "home", :action => "index", :switch => "on"}%>
 			<%end%>
 		</div>
+
 		<% if @old_pics.empty? %>
 			<div class="nopic">No Old Pictures</div>
 		<% else %>
-			<% for pic in @old_pics do %>
-				<div class="pic">
-				  <div ><img height="200" src='<%= "https://s3-us-west-1.amazonaws.com/tagprintshare/" + pic['pid'] + ".png" %>' onclick="print_pic('<%=pic['pid']%>')" onMouseOver="this.style.cursor='pointer'"></img></div>
-				  <div class="caption"><%= pic['caption'] %></div>
-				</div>
-			<% end %>
+			<table>
+				<tr>
+					<td>
+					<% for pic in @old_pics do %>
+						<div class="pic">
+						  <div ><img height="200" src='<%= "https://s3-us-west-1.amazonaws.com/tagprintshare/" + pic['pid'] + ".png" %>' onclick="print_pic('<%=pic['pid']%>')" onMouseOver="this.style.cursor='pointer'"></img></div>
+						  <div class="caption"><%= pic['caption'] %></div>
+						</div>
+					<% end %>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div style="text-align:center"><%= will_paginate @old_pics %></div>
+					</td>
+				</tr>	
+			</table>
 		<% end %>
+		</div>
 	</body>
 </html>
