@@ -16,6 +16,7 @@ ActiveRecord::Schema.define(version: 20161117051340) do
     t.text     "url",        limit: 16777215
     t.string   "caption",    limit: 250
     t.text     "pid",        limit: 16777215
+    t.text     "time_taken", limit: 16777215
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
   end

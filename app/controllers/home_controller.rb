@@ -1,7 +1,6 @@
 class HomeController < ApplicationController
 
 	require "open-uri"
-	require 'instagram_feed_by_hashtag'
 	require 'RMagick'
 	require 'aws-sdk'
 	require 'mini_magick'
@@ -14,20 +13,41 @@ class HomeController < ApplicationController
 		credentials: Aws::Credentials.new('AKIAJ5LHIKFE2RFTEARQ', 'Umj+fDcsEMJnC02MbeNJaVoSDJDq2oP3hYEzoBlP')
 	})
 
+	def scrape_instagram(hashtag, how_many)
+	    require 'net/http'
+	    url_raw = 'https://www.instagram.com/explore/tags/'+ hashtag +'/?__a=1'
+	    url = URI.parse("#{url_raw}")
+	    begin
+	      resp = Net::HTTP.get(url)
+	    rescue Errno::ETIMEDOUT, Errno::EINVAL, Errno::ECONNRESET, EOFError, Net::HTTPBadResponse => e
+	      resp = false
+	    end
+	    unless resp == false
+	      result = []
+	      parsed_json = JSON.parse(resp)
+	      #puts JSON.pretty_generate(parsed_json) # save for debugging, good viewer at http://jsonviewer.stack.hu/
+	      for i in 0..(how_many - 1)
+	        result << parsed_json['graphql']['hashtag']['edge_hashtag_to_media']['edges'][i]['node'] unless parsed_json['graphql']['hashtag']['edge_hashtag_to_media']['edges'][i].nil?
+	      end
+	    end
+	    result
+	end
+
 	def print_new_pics
 		begin
 			@new_pics = []
-			feed = InstagramFeedByHashtag.feed($hashtag, 20) # Make request and store JSON in feed variable
+			feed = scrape_instagram($hashtag, 20) # Make request and store JSON in feed variable
 
 			for picture in feed
-
 				# if there is a new picture, save it to the database and print it out
 				if Picture.find_by_pid(picture['id']).nil?
-					if !picture['id'].nil? && !picture['display_src'].nil? && !picture['id'].nil?
+					if !picture['id'].nil? && !picture['display_url'].nil?
 						p = Picture.new
-						p.url = picture['display_src']
-						unless picture['caption'].nil?
-							p.caption =	picture['caption'][0..200].scrub
+						p.url = picture['display_url']
+						p.time_taken = picture['taken_at_timestamp']
+
+						unless picture['edge_media_to_caption']['edges'][0]['node']['text'].nil?
+							p.caption =	picture['edge_media_to_caption']['edges'][0]['node']['text'][0..200].scrub
 						end	
 						p.pid = picture['id']
 						p.save
@@ -43,7 +63,7 @@ class HomeController < ApplicationController
 
 						if params[:print_flag] != "false"
 							Rails.logger.debug "print pic"
-							print_pic_with_pid(p.pid)
+							#print_pic_with_pid(p.pid)
 						end
 					end
 				end
@@ -60,7 +80,7 @@ class HomeController < ApplicationController
 		begin
 
 			# load the pictures
-			@old_pics = Picture.order(created_at: :desc)
+			@old_pics = Picture.order(time_taken: :desc)
 			p @old_pics #force an eager load
 
 			# let user turn script on/off

@@ -4,6 +4,7 @@ class CreatePictures < ActiveRecord::Migration[5.0]
       t.text :url
       t.text :caption
       t.text :pid
+      t.text :time_taken
       t.timestamps
     end
 
