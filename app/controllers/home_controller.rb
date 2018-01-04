@@ -120,8 +120,8 @@ class HomeController < ApplicationController
 			tmpimage = Tempfile.new(['image', '.png'])
 			IO.copy_stream(resp.body, tmpimage.path)
 			img = MiniMagick::Image.open(tmpimage.path)
-			img = img.resize("1260")
-
+			img = img.resize("1260x1260")
+			
 			#open the background and then merge the img into it
 			resp = s3.get_object(bucket:'iptemplates', key:'background.jpg')
 			tmpbackground = Tempfile.new(['background', '.png'])
@@ -129,13 +129,21 @@ class HomeController < ApplicationController
 			background = MiniMagick::Image.open(tmpbackground.path)
 
 			result = background.composite(img) do |c|
-				  c.compose "Over"    # OverCompositeOp
-				  c.geometry "+135+220" # copy second_image onto first_image from (20, 20)
+				 c.compose "Over"    # OverCompositeOp
+				 if img[:width] == 1008
+				 	c.geometry "+261+220" # copy second_image onto first_image from (20, 20)				 	
+				 else
+				 	c.geometry "+135+220" # copy second_image onto first_image from (20, 20)
+				 end
 			end
 			
 			result = result.composite(img) do |c|
 				  c.compose "Over"    # OverCompositeOp
-				  c.geometry "+1581+220" # copy second_image onto first_image from (20, 20)
+				  if img[:width] == 1008
+					  c.geometry "+1707+220" # copy second_image onto first_image from (20, 20)
+				  else
+					  c.geometry "+1581+220" # copy second_image onto first_image from (20, 20)
+				  end
 			end
 
 			#upload image to S3
