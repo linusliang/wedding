@@ -3,8 +3,10 @@ Rails.application.routes.draw do
 
 	resources :home, only: [:index]
 	root :to => "home#index"
-	post '/', :to =>"home#index"
 
+	post '/', :to =>"home#index"
+	post '/home', :to => "home#index"
+	
 	get '/oauth/connect', :to => "home#connect"
 	get '/oauth/callback', :to => "home#callback"
 	get '/menu', :to => "home#menu"
