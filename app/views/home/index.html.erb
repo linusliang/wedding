@@ -2,6 +2,20 @@
 <html>
 	<head>
 		<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
+		<script language="javascript" type="text/javascript">
+ 			setTimeout("location.reload();",30000);
+ 
+ 			function print_pic(pid){
+ 				var r = confirm("Are you sure you want to re-printing this picture?");
+ 				if (r==true){
+	 				var xhr = new XMLHttpRequest();
+	 				xhr.open('GET', 'https://tagprintshare.com/print_pic_with_pid/?pid='+pid);
+	 				xhr.send(null); 					
+ 				}
+ 			}
+ 		</script>
+
 	</head>
 
 	<body>
@@ -16,9 +30,9 @@
 	       	<div class="row">
 	      		<div class="col-xs-12" style="text-align:center">
 					<%if @pid != ""%>
-						<%= button_to "Script is ON, turn it OFF?", {:controller => "home", :action => "index", :switch => "off"}, class: 'btn btn-primary'%>
+						<%= button_to "Script is ON, turn it OFF?", {:controller => "home", :action => "index", :switch => "off"}, class: 'btn btn-success btn-sm'%>
 					<%else%>
-						<%= button_to "Script is OFF, turn it ON?", {:controller => "home", :action => "index", :switch => "on"}, class: 'btn btn-warning'%>
+						<%= button_to "Script is OFF, turn it ON?", {:controller => "home", :action => "index", :switch => "on"}, class: 'btn btn-danger btn-sm'%>
 					<%end%>
 		        </div>
 			</div>

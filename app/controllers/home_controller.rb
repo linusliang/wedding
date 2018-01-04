@@ -62,7 +62,7 @@ class HomeController < ApplicationController
 						edit_pic(p.pid)
 
 						if params[:print_flag] != "false"
-							Rails.logger.debug "print pic"
+							Rails.logger.debug "printing  pic " + p.pid 
 							print_pic_with_pid(p.pid)
 						end
 					end
@@ -158,26 +158,15 @@ class HomeController < ApplicationController
 		end
 	end
 
-	def print_pic_with_pid(pid)
+	def print_pic_with_pid(pid=params[:pid])
 		begin
 			PhotoMailer.email_photo(pid).deliver
 			#system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + pid  + '_print.jpg')
+			head :ok
 		rescue Exception => e 
 			Rails.logger.debug "**************** ERROR IN PRINT PIC WITH PID****************"
 			Rails.logger.debug e.message  
 		end
-	end
-
-	def print_pic()
-		pid=params[:pid]
-		begin
-			PhotoMailer.email_photo(pid).deliver
-			#system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + pid  + '_print.jpg')
-		rescue Exception => e 
-			Rails.logger.debug "**************** ERROR IN PRINT PIC ****************"
-			Rails.logger.debug e.message  
-		end
-		head :ok
 	end
 end
 
