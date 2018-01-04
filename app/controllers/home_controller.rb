@@ -80,7 +80,7 @@ class HomeController < ApplicationController
 		begin
 
 			# load the pictures
-			@old_pics = Picture.order(time_taken: :desc).paginate(page: params[:page], per_page: 20)
+			@old_pics = Picture.order(time_taken: :desc).paginate(page: params[:page], per_page: 15)
 			p @old_pics #force an eager load
 
 			# let user turn script on/off
