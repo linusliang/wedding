@@ -18,7 +18,7 @@
 					<%if @pid != ""%>
 						<%= button_to "Script is ON, turn it OFF?", {:controller => "home", :action => "index", :switch => "off"}, class: 'btn btn-primary'%>
 					<%else%>
-						<%= button_to "Script is OFF, turn it ON?", {:controller => "home", :action => "index", :switch => "on"}, class: 'btn btn-primary'%>
+						<%= button_to "Script is OFF, turn it ON?", {:controller => "home", :action => "index", :switch => "on"}, class: 'btn btn-warning'%>
 					<%end%>
 		        </div>
 			</div>
