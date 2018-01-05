@@ -78,7 +78,6 @@ class HomeController < ApplicationController
 	def index
 
 		begin
-
 			# load the pictures
 			@old_pics = Picture.order(time_taken: :desc).paginate(page: params[:page], per_page: 15)
 			p @old_pics #force an eager load
@@ -161,7 +160,6 @@ class HomeController < ApplicationController
 	def print_pic_with_pid(pid=params[:pid])
 		begin
 			PhotoMailer.email_photo(pid).deliver
-			#system("lpr -P EPSON_PM_400_Series -o PageSize=4x6.Fullbleed " + "#{Rails.root}/public/" + pid  + '_print.jpg')
 			head :ok
 		rescue Exception => e 
 			Rails.logger.debug "**************** ERROR IN PRINT PIC WITH PID****************"

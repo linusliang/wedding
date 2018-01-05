@@ -27,6 +27,7 @@
 	        	</div>
 	    	</div>
 
+	    	<% if params[:admin]=="on" %>
 	       	<div class="row">
 	      		<div class="col-xs-12" style="text-align:center">
 					<%if @pid != ""%>
@@ -36,6 +37,7 @@
 					<%end%>
 		        </div>
 			</div>
+			<% end %>
 
 			<% if @old_pics.empty? %>
 				<div class="row">
