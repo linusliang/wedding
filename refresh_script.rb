@@ -9,8 +9,3 @@ while true
 		Rails.logger.debug e.message  		
 	end
 end
-
-
-<div class="intrinsic-container intrinsic-container-16x9">
-  <iframe src="https://tagprintshare.com/" allowfullscreen></iframe>
-</div>

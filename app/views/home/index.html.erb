@@ -27,7 +27,7 @@
 	        	</div>
 	    	</div>
 
-	    	<% if params[:admin]=="on" %>
+	    	<% if session[:admin] %>
 	       	<div class="row">
 	      		<div class="col-xs-12" style="text-align:center">
 					<%if @pid != ""%>

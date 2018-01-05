@@ -77,6 +77,11 @@ class HomeController < ApplicationController
 
 	def index
 
+		# check to see if we enable admin mode
+		if params[:admin]=="on"
+			session[:admin] = true
+		end
+
 		begin
 			# load the pictures
 			@old_pics = Picture.order(time_taken: :desc).paginate(page: params[:page], per_page: 15)
@@ -85,12 +90,13 @@ class HomeController < ApplicationController
 			# let user turn script on/off
 			@pid = (`pgrep -f refresh_script.rb`)
 			if params[:switch] == "on" && @pid == ""
-				Rails.logger.debug "turning process on"
+				#Rails.logger.debug "turning process on"
 				output = (`nohup ruby /var/app/current/refresh_script.rb > /dev/null &`)
+				@pid = (`pgrep -f refresh_script.rb`)
 			elsif params[:switch] == "off"	&& @pid != ""
-				Rails.logger.debug "turning process off"
-				Rails.logger.debug "killing PID -->" + @pid
+				#Rails.logger.debug "killing PID:" + @pid
 				Process.kill('KILL', @pid.to_i)	
+				@pid = ""
 			end
 
 		rescue Exception => e 
