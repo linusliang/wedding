@@ -6,7 +6,7 @@ class HomeController < ApplicationController
 	require 'mini_magick'
 	require 'tempfile'
 
-	$hashtag = 'instaprinterfun'
+	$hashtag = 'becomingtheballoggs'
 
 	Aws.config.update({
 		region: 'us-west-1',
