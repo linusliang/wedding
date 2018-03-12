@@ -145,9 +145,9 @@ class HomeController < ApplicationController
 			result = result.composite(img) do |c|
 				  c.compose "Over"    # OverCompositeOp
 				  if img[:width] == 1008
-					  c.geometry "+1707+220" # copy second_image onto first_image from (20, 20)
+					  c.geometry "+1702+220" # copy second_image onto first_image from (20, 20)
 				  else
-					  c.geometry "+1581+220" # copy second_image onto first_image from (20, 20)
+					  c.geometry "+1576+220" # copy second_image onto first_image from (20, 20)
 				  end
 			end
 
