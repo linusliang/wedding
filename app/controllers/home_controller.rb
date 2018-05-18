@@ -7,7 +7,8 @@ class HomeController < ApplicationController
 	require 'tempfile'
 
 	$hashtag = 'getinstaprinter2'
-	$instabucket  = 'instaprinter2'
+	$ipbucket  = 'instaprinter2'
+	$ipbackground = 'background.jpg'
                      
 	Aws.config.update({
 		region: 'us-west-1',
@@ -112,7 +113,7 @@ class HomeController < ApplicationController
 		
 		# Save File to S3
 		s3 = Aws::S3::Resource.new
-		bucket = s3.bucket($instabucket)
+		bucket = s3.bucket($ipbucket)
 		obj = bucket.object(pid  + '.png')      
 		obj.upload_file(download)
 	end
@@ -122,14 +123,14 @@ class HomeController < ApplicationController
 
 			# read the image
 			s3 = Aws::S3::Client.new
-			resp = s3.get_object(bucket:$instabucket, key:pid + '.png')
+			resp = s3.get_object(bucket:$ipbucket, key:pid + '.png')
 			tmpimage = Tempfile.new(['image', '.png'])
 			IO.copy_stream(resp.body, tmpimage.path)
 			img = MiniMagick::Image.open(tmpimage.path)
 			img = img.resize("1260x1260")
 			
 			#open the background and then merge the img into it
-			resp = s3.get_object(bucket:'iptemplates', key:'background.jpg')
+			resp = s3.get_object(bucket:'iptemplates', key:$ipbackground)
 			tmpbackground = Tempfile.new(['background', '.png'])
 			IO.copy_stream(resp.body, tmpbackground.path)
 			background = MiniMagick::Image.open(tmpbackground.path)
@@ -154,7 +155,7 @@ class HomeController < ApplicationController
 
 			#upload image to S3
 			s3 = Aws::S3::Resource.new
-			bucket = s3.bucket($instabucket)
+			bucket = s3.bucket($ipbucket)
 			obj = bucket.object(pid  + '_print.jpg')
 			obj.put(body: result.to_blob)
 
