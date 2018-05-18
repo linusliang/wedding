@@ -51,7 +51,7 @@
 				<% for pic in @old_pics do %>
 					<div class="col-xs-4 pic" style="text-align:center;padding:20px;">
 						<div>
-						  	<img height="200" src='<%= "https://s3-us-west-1.amazonaws.com/tagprintshare/" + pic['pid'] + ".png" %>' onclick="print_pic('<%=pic['pid']%>')" onMouseOver="this.style.cursor='pointer'"></img>
+						  	<img height="200" src='<%= "https://s3-us-west-1.amazonaws.com/<%=$instabucket%>/" + pic['pid'] + ".png" %>' onclick="print_pic('<%=pic['pid']%>')" onMouseOver="this.style.cursor='pointer'"></img>
 						</div>
 						<div class="text-justify"><%= pic['caption'] %></div>
 					</div>
