@@ -7,7 +7,7 @@ class HomeController < ApplicationController
 	require 'tempfile'
 
 	$hashtag = 'getinstaprinter2'
-	$instabucket  = ENV['instabucket']
+	$instabucket  = 'instaprinter2'
                      
 	Aws.config.update({
 		region: 'us-west-1',
