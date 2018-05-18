@@ -8,7 +8,7 @@ class HomeController < ApplicationController
 
 	$hashtag = 'getinstaprinter2'
 	$ipbucket  = 'instaprinter2'
-	$ipbackground = 'background.jpg'
+	$ipbackground = 'ip2_background.jpg'
                      
 	Aws.config.update({
 		region: 'us-west-1',
