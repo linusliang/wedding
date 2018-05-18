@@ -21,6 +21,9 @@ class PhotoMailer < ApplicationMailer
 			#InstaPrinter2
 			mg_obj.add_recipient(:to, "mmt4049dvdspp0@print.epsonconnect.com");  
 
+			#InstaPrinter3
+			#mg_obj.add_recipient(:to, "apx54057gjv1c5@print.epsonconnect.com");  
+
 			# Define the subject + body
 			mg_obj.set_subject(pid)  
 			mg_obj.set_text_body(pid)
