@@ -7,7 +7,7 @@ class HomeController < ApplicationController
 	require 'tempfile'
 
 	$hashtag = 'getinstaprinter2'
-	$bucket  = 'instaprinter2'
+	$instabucket  = 'instaprinter2'
 
 	Aws.config.update({
 		region: 'us-west-1',
@@ -112,7 +112,7 @@ class HomeController < ApplicationController
 		
 		# Save File to S3
 		s3 = Aws::S3::Resource.new
-		bucket = s3.bucket('instaprinter2')
+		bucket = s3.bucket($instabucket)
 		obj = bucket.object(pid  + '.png')      
 		obj.upload_file(download)
 	end
@@ -122,7 +122,7 @@ class HomeController < ApplicationController
 
 			# read the image
 			s3 = Aws::S3::Client.new
-			resp = s3.get_object(bucket:$bucket, key:pid + '.png')
+			resp = s3.get_object(bucket:$instabucket, key:pid + '.png')
 			tmpimage = Tempfile.new(['image', '.png'])
 			IO.copy_stream(resp.body, tmpimage.path)
 			img = MiniMagick::Image.open(tmpimage.path)
@@ -154,7 +154,7 @@ class HomeController < ApplicationController
 
 			#upload image to S3
 			s3 = Aws::S3::Resource.new
-			bucket = s3.bucket($bucket)
+			bucket = s3.bucket($instabucket)
 			obj = bucket.object(pid  + '_print.jpg')
 			obj.put(body: result.to_blob)
 
