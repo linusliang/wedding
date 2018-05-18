@@ -14,8 +14,12 @@ class PhotoMailer < ApplicationMailer
 			mg_obj.set_from_address(ENV['username'], {"first"=>"Linus", "last" => "Liang"})
 
 			# Define a to recipient
-			mg_obj.add_recipient(:to, "xqs3850dx8nag2@print.epsonconnect.com ");  
-			#mg_obj.add_recipient(:to, "linusliang@gmail.com")
+
+			#InstaPrinter1
+			#mg_obj.add_recipient(:to, "xqs3850dx8nag2@print.epsonconnect.com");  
+
+			#InstaPrinter2
+			mg_obj.add_recipient(:to, "mmt4049dvdspp0@print.epsonconnect.com");  
 
 			# Define the subject + body
 			mg_obj.set_subject(pid)  
