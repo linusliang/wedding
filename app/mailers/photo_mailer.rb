@@ -27,7 +27,7 @@ class PhotoMailer < ApplicationMailer
 
 			# read the image
 			s3 = Aws::S3::Client.new
-			resp = s3.get_object(bucket:'tagprintshare', key:pid + '_print.jpg')
+			resp = s3.get_object(bucket:ENV['instabucket'], key:pid + '_print.jpg')
 		    tempfile = Tempfile.new(['hello', '.jpg'])
     		IO.copy_stream(resp.body, tempfile.path)
 			mg_obj.add_attachment(tempfile.path, pid + "_print.jpg")
