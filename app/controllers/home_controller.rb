@@ -6,7 +6,7 @@ class HomeController < ApplicationController
 	require 'mini_magick'
 	require 'tempfile'
 
-	$hashtag = 'ADTturns2'
+	$hashtag = 'ADTturns1'
 
 	Aws.config.update({
 		region: 'us-west-1',
