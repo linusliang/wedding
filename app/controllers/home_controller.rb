@@ -211,13 +211,27 @@ class HomeController < ApplicationController
 			IO.copy_stream(resp.body, tmpbackground.path)
 			background = MiniMagick::Image.open(tmpbackground.path)
 
-			#now add the captions to the background
-			newcaption = wrap(username + ' ' + caption, 55)
-			newcaption = newcaption.scrub
+			# create the caption
+	      	caption.scrub 
+	      	caption = "the quick brown fox jumps over the lazy dog the quick brown fox jumps over the lazy dog the quick brown fox jumps over the lazy dog"     	
+	      	caption = " " * (username.length * 1.8) + caption
+			newcaption = wrap(caption, 55)
 
-			offset = 660 + (newcaption.length / 60) * 25		
+			offset = 660 + (newcaption.length / 55) * 25
+
+			#now add the username to the background
+			font = "/Library/Fonts/Arial Bold.ttf"
 			background =  background.combine_options do |i|
-		        #i.font "Helvetica"
+		        i.font font
+		        i.gravity "West"
+		        i.pointsize 50
+		        i.draw "text 138,627 '#{username}'"
+		        i.draw "text 1550,627 '#{username}'"
+	      	end
+
+			font = "/Library/Fonts/Arial.ttf"
+			background =  background.combine_options do |i|
+		        i.font font
 		        i.gravity "West"
 		        i.pointsize 50
 		        i.draw "text 138, #{offset} '#{newcaption}'"
