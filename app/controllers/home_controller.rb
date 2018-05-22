@@ -220,7 +220,7 @@ class HomeController < ApplicationController
 			offset = 660 + (newcaption.length / 55) * 25
 
 			#now add the username to the background
-			font = "/Library/Fonts/Arial Bold.ttf"
+			font = "#{RAILS_ROOT}/public/Arial_Bold.ttf"
 			background =  background.combine_options do |i|
 		        i.font font
 		        i.gravity "West"
@@ -229,7 +229,7 @@ class HomeController < ApplicationController
 		        i.draw "text 1550,627 '#{username}'"
 	      	end
 
-			font = "/Library/Fonts/Arial.ttf"
+			font = "#{RAILS_ROOT}/public/Arial.ttf"
 			background =  background.combine_options do |i|
 		        i.font font
 		        i.gravity "West"
