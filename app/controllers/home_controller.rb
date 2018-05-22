@@ -218,7 +218,7 @@ class HomeController < ApplicationController
 			background =  background.combine_options do |i|
 		        #i.font "Helvetica"
 		        i.gravity "West"
-		        i.pointsize 45
+		        i.pointsize 50
 		        i.draw "text 138, #{offset} '#{newcaption}'"
 		        i.draw "text 1550, #{offset} '#{newcaption}'"
 	      	end
