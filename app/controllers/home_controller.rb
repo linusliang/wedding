@@ -212,8 +212,9 @@ class HomeController < ApplicationController
 			background = MiniMagick::Image.open(tmpbackground.path)
 
 			#now add the captions to the background
-			newcaption = wrap(username + ' ' + caption, 60)
-
+			newcaption = wrap(username + ' ' + caption, 50)
+			newcaption = newcaption.scrub
+			
 			offset = 660 + (newcaption.length / 60) * 20 		
 			background =  background.combine_options do |i|
 		        #i.font "Helvetica"
