@@ -54,17 +54,19 @@ class HomeController < ApplicationController
 						p.pid = picture['id']
 						p.save
 						
+						# save picture into the database
 					 	@new_pics.push(p)
-					
+
 						#download picture, edit pic, and then print pic
 						Rails.logger.debug "download pic"
 						download_pic(p.url, p.pid)
 
 						Rails.logger.debug "edit pic"
-						edit_pic(p.pid)
+						#edit_pic(p.pid)
+						edit_pic_username_caption(p.pid, picture, p.caption)
 
 						if params[:print_flag] != "false"
-							Rails.logger.debug "printing  pic " + p.pid 
+							Rails.logger.debug "printing pic " + p.pid 
 							print_pic_with_pid(p.pid)
 						end
 					end
@@ -105,6 +107,25 @@ class HomeController < ApplicationController
 			Rails.logger.debug "**************** ERROR IN INDEX ****************"
 			Rails.logger.debug e.message  		
 		end
+	end
+
+	def get_username(picture)
+
+		require 'net/http'
+		url_raw = 'https://www.instagram.com/p/'+ picture['shortcode'] +'/?__a=1'
+		url = URI.parse("#{url_raw}")
+		begin
+		  resp = Net::HTTP.get(url)
+		rescue Errno::ETIMEDOUT, Errno::EINVAL, Errno::ECONNRESET, EOFError, Net::HTTPBadResponse => e
+		  resp = false
+		end
+
+		unless resp == false
+		  result = []
+		  parsed_json = JSON.parse(resp)
+		  username = parsed_json['graphql']['shortcode_media']['owner']['username']
+		end
+		username
 	end
 
 	def download_pic(link, pid)
@@ -164,6 +185,75 @@ class HomeController < ApplicationController
 			Rails.logger.debug e.message  
 		end
 	end
+
+	def wrap(s, width=78)
+	  s.gsub(/(.{1,#{width}})(\s+|\Z)/, "\\1\n")
+	end
+
+	def edit_pic_username_caption(pid, picture, caption)
+		begin
+
+			if !picture.nil?
+				username = get_username(picture)
+			end 
+
+			# read the image
+			s3 = Aws::S3::Client.new
+			resp = s3.get_object(bucket:$ipbucket, key:pid + '.png')
+			tmpimage = Tempfile.new(['image', '.png'])
+			IO.copy_stream(resp.body, tmpimage.path)
+			img = MiniMagick::Image.open(tmpimage.path)
+			img = img.resize("1260x1260")
+			
+			#open the background and then merge the img into it
+			resp = s3.get_object(bucket:'iptemplates', key:$ipbackground)
+			tmpbackground = Tempfile.new(['background', '.png'])
+			IO.copy_stream(resp.body, tmpbackground.path)
+			background = MiniMagick::Image.open(tmpbackground.path)
+
+			#now add the captions to the background
+			newcaption = wrap(username + ' ' + caption, 60)
+
+			offset = 660 + (newcaption.length / 60) * 20 		
+			background =  background.combine_options do |i|
+		        #i.font "Helvetica"
+		        i.gravity "West"
+		        i.pointsize 45
+		        i.draw "text 138, #{offset} '#{newcaption}'"
+		        i.draw "text 1550, #{offset} '#{newcaption}'"
+	      	end
+
+
+			result = background.composite(img) do |c|
+				 c.compose "Over"    # OverCompositeOp
+				 if img[:width] == 1008
+				 	c.geometry "+261+220" # copy second_image onto first_image from (20, 20)				 	
+				 else
+				 	c.geometry "+135+220" # copy second_image onto first_image from (20, 20)
+				 end
+			end
+			
+			result = result.composite(img) do |c|
+				  c.compose "Over"    # OverCompositeOp
+				  if img[:width] == 1008
+					  c.geometry "+1682+220" # copy second_image onto first_image from (20, 20)
+				  else
+					  c.geometry "+1556+220" # copy second_image onto first_image from (20, 20)
+				  end
+			end
+
+			#upload image to S3
+			s3 = Aws::S3::Resource.new
+			bucket = s3.bucket($ipbucket)
+			obj = bucket.object(pid  + '_print.jpg')
+			obj.put(body: result.to_blob)
+
+		rescue Exception => e 
+			Rails.logger.debug "**************** ERROR IN EDIT PIC ****************"
+			Rails.logger.debug e.message  
+		end
+	end
+
 
 	def print_pic_with_pid(pid=params[:pid])
 		begin
