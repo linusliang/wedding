@@ -213,7 +213,6 @@ class HomeController < ApplicationController
 
 			# create the caption
 	      	caption.scrub 
-	      	caption = "the quick brown fox jumps over the lazy dog the quick brown fox jumps over the lazy dog the quick brown fox jumps over the lazy dog"     	
 	      	caption = " " * (username.length * 1.8) + caption
 			newcaption = wrap(caption, 55)
 
