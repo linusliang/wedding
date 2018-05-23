@@ -6,7 +6,7 @@ class HomeController < ApplicationController
 	require 'mini_magick'
 	require 'tempfile'
 
-	$hashtag = 'ADoneDill'
+	$hashtag = 'ipasdf3'
 	$ipbucket  = 'instaprinter3'
 	$ipbackground = 'ip3_background.jpg'
                      
@@ -50,6 +50,9 @@ class HomeController < ApplicationController
 
 						unless picture['edge_media_to_caption']['edges'][0]['node']['text'].nil?
 							p.caption =	picture['edge_media_to_caption']['edges'][0]['node']['text'][0..200].scrub
+							if (p.caption.length == 200)
+								p.caption = p.caption + " ..."
+							end	
 						end	
 						p.pid = picture['id']
 						p.save
