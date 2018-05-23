@@ -224,8 +224,8 @@ class HomeController < ApplicationController
 		        i.font font
 		        i.gravity "West"
 		        i.pointsize 50
-		        i.draw "text 138,627 '#{username}'"
-		        i.draw "text 1550,627 '#{username}'"
+		        i.draw "text 168,627 '#{username}'"
+		        i.draw "text 1580,627 '#{username}'"
 	      	end
 
 			font = "#{Rails.root}/public/Arial.ttf"
@@ -233,8 +233,8 @@ class HomeController < ApplicationController
 		        i.font font
 		        i.gravity "West"
 		        i.pointsize 50
-		        i.draw "text 138, #{offset} '#{newcaption}'"
-		        i.draw "text 1550, #{offset} '#{newcaption}'"
+		        i.draw "text 168, #{offset} '#{newcaption}'"
+		        i.draw "text 1580, #{offset} '#{newcaption}'"
 	      	end
 
 
