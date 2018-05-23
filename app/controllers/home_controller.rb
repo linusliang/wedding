@@ -217,9 +217,9 @@ class HomeController < ApplicationController
 			# create the caption
 	      	caption.scrub 
 	      	caption = " " * (username.length * 1.8) + caption
-			newcaption = wrap(caption, 55)
+			newcaption = wrap(caption, 50)
 
-			offset = 660 + (newcaption.length / 55) * 25
+			offset = 660 + (newcaption.length / 50) * 25
 
 			#now add the username to the background
 			font = "#{Rails.root}/public/Arial_Bold.ttf"
