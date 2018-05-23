@@ -50,9 +50,6 @@ class HomeController < ApplicationController
 
 						unless picture['edge_media_to_caption']['edges'][0]['node']['text'].nil?
 							p.caption =	picture['edge_media_to_caption']['edges'][0]['node']['text'][0..200].scrub
-							if (p.caption.length == 200)
-								p.caption = p.caption + " ..."
-							end	
 						end	
 						p.pid = picture['id']
 						p.save
