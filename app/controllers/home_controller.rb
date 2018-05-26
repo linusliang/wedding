@@ -65,8 +65,8 @@ class HomeController < ApplicationController
 						download_pic(p.url, p.pid)
 
 						Rails.logger.debug "edit pic"
-						#edit_pic(p.pid)
-						edit_pic_username_caption(p.pid, picture, p.caption)
+						edit_pic(p.pid)
+						#edit_pic_username_caption(p.pid, picture, p.caption)
 
 						if params[:print_flag] != "false"
 							Rails.logger.debug "printing pic " + p.pid 
