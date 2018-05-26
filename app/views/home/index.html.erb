@@ -10,7 +10,7 @@
  				var r = confirm("Are you sure you want to re-printing this picture?");
  				if (r==true){
 	 				var xhr = new XMLHttpRequest();
-	 				xhr.open('GET', 'https://tagprintshare.com/print_pic_with_pid/?pid='+pid);
+	 				xhr.open('GET', 'https://production-2.us-west-1.elasticbeanstalk.com/print_pic_with_pid/?pid='+pid);
 	 				xhr.send(null); 					
  				}
  			}
