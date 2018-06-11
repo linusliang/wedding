@@ -6,7 +6,7 @@ while true
 		system('wget --quiet -O - http://production.4dyvwfpdk3.us-west-1.elasticbeanstalk.com/print_new_pics')
 
 		#production server 2
-		#git system('wget --quiet -O - http://production-2.us-west-1.elasticbeanstalk.com/print_new_pics')
+		#system('wget --quiet -O - http://production-2.us-west-1.elasticbeanstalk.com/print_new_pics')
 
 		#production server 3
 		#system('wget --quiet -O - http://production-4.us-west-1.elasticbeanstalk.com/print_new_pics')
