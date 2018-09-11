@@ -11,7 +11,7 @@ while true
 		#production server 3
 		#system('wget --quiet -O - http://production-3.us-west-1.elasticbeanstalk.com/print_new_pics')
 		
-		sleep 15
+		sleep 10
 	rescue Exception => e 
 		Rails.logger.debug "**************** ERROR IN refresh script ****************"
 		Rails.logger.debug e.message  		
