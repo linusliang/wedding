@@ -25,7 +25,7 @@ class PhotoMailer < ApplicationMailer
 			#mg_obj.add_recipient(:to, "instaprinter3@print.epsonconnect.com");  
 
 			#InstaPrinter4
-			mg_obj.add_recipient(:to, "instaprinter4@print.epsonconnect.com");  
+			#mg_obj.add_recipient(:to, "instaprinter4@print.epsonconnect.com");  
 
 			#InstaPrinter5
 			mg_obj.add_recipient(:to, "instaprinter5@print.epsonconnect.com");  
