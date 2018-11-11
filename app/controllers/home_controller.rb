@@ -7,8 +7,8 @@ class HomeController < ApplicationController
 	require 'tempfile'
 
 	$hashtag = 'alexandernomoore'
-	$ipbucket  = 'instaprinter5'
-	$ipbackground = 'ip5_background.jpg'
+	$ipbucket  = 'instaprinter7'
+	$ipbackground = 'ip7_background.jpg'
                      
 	Aws.config.update({
 		region: 'us-west-1',
