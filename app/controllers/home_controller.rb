@@ -6,9 +6,9 @@ class HomeController < ApplicationController
 	require 'mini_magick'
 	require 'tempfile'
 
-	$hashtag = 'shaneandyannick'
-	$ipbucket  = 'instaprinter8'
-	$ipbackground = 'ip8_background.jpg'
+	$hashtag = 'JurassicHooters'
+	$ipbucket  = 'instaprinter6'
+	$ipbackground = 'ip6_background.jpg'
                      
 	Aws.config.update({
 		region: 'us-west-1',
