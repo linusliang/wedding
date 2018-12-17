@@ -22,10 +22,10 @@ class PhotoMailer < ApplicationMailer
 			#mg_obj.add_recipient(:to, "instaprinter5@print.epsonconnect.com");  
 
 			#InstaPrinter6
-			mg_obj.add_recipient(:to, "instaprinter6@print.epsonconnect.com");  
+			#mg_obj.add_recipient(:to, "instaprinter6@print.epsonconnect.com");  
 
 			#InstaPrinter7
-			#mg_obj.add_recipient(:to, "instaprinter7@print.epsonconnect.com");  
+			mg_obj.add_recipient(:to, "instaprinter7@print.epsonconnect.com");  
 
 			#InstaPrinter8
 			#mg_obj.add_recipient(:to, "instaprinter8@print.epsonconnect.com");  
@@ -36,7 +36,7 @@ class PhotoMailer < ApplicationMailer
 
 			# read the image
 			s3 = Aws::S3::Client.new
-			resp = s3.get_object(bucket:'instaprinter6', key:pid + '_print.jpg')
+			resp = s3.get_object(bucket:'instaprinter7', key:pid + '_print.jpg')
 		    tempfile = Tempfile.new(['hello', '.jpg'])
     		IO.copy_stream(resp.body, tempfile.path)
 			mg_obj.add_attachment(tempfile.path, pid + "_print.jpg")
