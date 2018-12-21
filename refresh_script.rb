@@ -10,8 +10,8 @@ while true
 		#system('wget --quiet -O - http://instaprinter6.us-west-1.elasticbeanstalk.com/print_new_pics')
 		#system('wget --quiet -O - http://instaprinter7.us-west-1.elasticbeanstalk.com/print_new_pics')
 		#system('wget --quiet -O - http://instaprinter8.us-west-1.elasticbeanstalk.com/print_new_pics')
-		#system('wget --quiet -O - http://instaprinter9.us-west-1.elasticbeanstalk.com/print_new_pics')
-		system('wget --quiet -O - http://instaprinter10.us-west-1.elasticbeanstalk.com/print_new_pics')
+		system('wget --quiet -O - http://instaprinter9.us-west-1.elasticbeanstalk.com/print_new_pics')
+		#system('wget --quiet -O - http://instaprinter10.us-west-1.elasticbeanstalk.com/print_new_pics')
 		
 		sleep 10
 	rescue Exception => e 
