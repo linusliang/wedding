@@ -6,7 +6,7 @@ class HomeController < ApplicationController
 	require 'mini_magick'
 	require 'tempfile'
 
-	$hashtag = 'Aleenahs18th'
+	$hashtag = 'MaysonTurns7'
 	$ipbucket  = 'instaprinter7'
 	$ipbackground = 'ip7_background.jpg'
                      
